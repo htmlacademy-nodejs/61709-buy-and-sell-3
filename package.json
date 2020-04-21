@@ -4,9 +4,9 @@
   "description": "«Куплю. Продам»",
   "main": "./src/service/service.js",
   "scripts": {
-    "start": "node ./src/service/service.js",
     "test": "npm run eslint",
-    "eslint": "eslint --ext .js src/"
+    "eslint": "eslint --ext .js src/",
+    "start": "node ./src/service/service.js"
   },
   "repository": {
     "type": "git",
