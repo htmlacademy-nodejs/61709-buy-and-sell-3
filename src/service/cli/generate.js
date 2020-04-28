@@ -5,15 +5,13 @@ const chalk = require(`chalk`);
 const {
   getRandomInt,
   shuffle,
+  readContent
 } = require(`../../utils`);
 
 const {
   ExitCode,
   DEFAULT_COUNT,
-  FILE_NAME,
-  TITLES,
-  SENTENCES,
-  CATEGORIES,
+  FilePath,
   OfferType,
   SumRestrict,
   PictureRestrict,
@@ -26,12 +24,12 @@ const getDescription = (sentences) => shuffle(sentences).slice(GeneratorSlicer.S
 const getOfferType = (offerType) => Object.keys(offerType)[Math.floor(Math.random() * Object.keys(offerType).length)];
 const getTitle = (titles) => titles[getRandomInt(0, titles.length - 1)];
 
-const generateOffers = (count) => (
+const generateOffers = (count, titles, categories, sentences) => (
   Array(count).fill({}).map(() => ({
-    category: getCategory(CATEGORIES),
-    description: getDescription(SENTENCES),
+    category: getCategory(categories),
+    description: getDescription(sentences),
     picture: getPictureFileName(getRandomInt(PictureRestrict.MIN, PictureRestrict.MAX)),
-    title: getTitle(TITLES),
+    title: getTitle(titles),
     type: getOfferType(OfferType),
     sum: getRandomInt(SumRestrict.min, SumRestrict.max)
   }))
@@ -40,11 +38,14 @@ const generateOffers = (count) => (
 module.exports = {
   name: `--generate`,
   async run(userInputValue) {
+    const sentences = await readContent(FilePath.SENTENCES);
+    const titles = await readContent(FilePath.TITLES);
+    const categories = await readContent(FilePath.CATEGORIES);
     const countOffer = Math.abs(Number.parseInt(userInputValue, 10) || DEFAULT_COUNT);
-    const content = JSON.stringify(generateOffers(countOffer));
+    const content = JSON.stringify(generateOffers(countOffer, titles, categories, sentences));
 
     try {
-      await fs.writeFile(FILE_NAME, content);
+      await fs.writeFile(FilePath.MOCKS, content);
       return console.log(chalk.green(`Operation success. File created.`));
     } catch (e) {
       console.error(chalk.red(`Can't write data to file...`));
