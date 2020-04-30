@@ -2,13 +2,21 @@
 
 const DEFAULT_COMMAND = `--help`;
 const USER_ARGV_INDEX = 2;
+const DEFAULT_PORT = 3000;
+const DEFAULT_COUNT = 1;
 
 const ExitCode = {
   ERROR: 1,
-  SUCCESS: 0,
+  SUCCESS: 0
 };
 
-const DEFAULT_COUNT = 1;
+const HttpCode = {
+  SUCCESS: 200,
+  NOT_FOUND: 404,
+  INTERNAL_SERVER_ERROR: 500,
+  FORBIDDEN: 403,
+  UNAUTHORIZED: 401
+};
 
 const FilePath = {
   MOCKS: `mocks.json`,
@@ -19,17 +27,17 @@ const FilePath = {
 
 const OfferType = {
   OFFER: `offer`,
-  SALE: `sale`,
+  SALE: `sale`
 };
 
 const SumRestrict = {
   MIN: 1000,
-  MAX: 100000,
+  MAX: 100000
 };
 
 const PictureRestrict = {
   MIN: 1,
-  MAX: 16,
+  MAX: 16
 };
 
 const GeneratorSlicer = {
@@ -39,12 +47,14 @@ const GeneratorSlicer = {
 
 module.exports = {
   DEFAULT_COMMAND,
+  DEFAULT_PORT,
   USER_ARGV_INDEX,
-  ExitCode,
   DEFAULT_COUNT,
+  ExitCode,
   FilePath,
   OfferType,
   SumRestrict,
   PictureRestrict,
-  GeneratorSlicer
+  GeneratorSlicer,
+  HttpCode
 };

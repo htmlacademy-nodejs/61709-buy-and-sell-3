@@ -27,8 +27,11 @@ const readContent = async (filePath) => {
   }
 };
 
+const printNumWithLead0 = (number) => number < 10 ? `0${number}` : number;
+
 module.exports = {
   getRandomInt,
   shuffle,
-  readContent
+  readContent,
+  printNumWithLead0
 };
