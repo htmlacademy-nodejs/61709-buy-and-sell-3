@@ -2,7 +2,7 @@
 
 const DEFAULT_COMMAND = `--help`;
 const USER_ARGV_INDEX = 2;
-
+const PUBLIC_DIR = `public`;
 const DEFAULT_COUNT = 1;
 
 const DefaultPort = {
@@ -52,7 +52,7 @@ const GeneratorSlicer = {
 
 module.exports = {
   DEFAULT_COMMAND,
-  DefaultPort,
+  PUBLIC_DIR,
   USER_ARGV_INDEX,
   DEFAULT_COUNT,
   ExitCode,
@@ -61,5 +61,6 @@ module.exports = {
   SumRestrict,
   PictureRestrict,
   GeneratorSlicer,
-  HttpCode
+  HttpCode,
+  DefaultPort
 };
