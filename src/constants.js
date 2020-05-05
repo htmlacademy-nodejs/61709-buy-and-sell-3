@@ -2,8 +2,13 @@
 
 const DEFAULT_COMMAND = `--help`;
 const USER_ARGV_INDEX = 2;
-const DEFAULT_PORT = 3000;
+
 const DEFAULT_COUNT = 1;
+
+const DefaultPort = {
+  FRONT_SERVER: 8080,
+  SERVICE_SERVER: 3000
+};
 
 const ExitCode = {
   ERROR: 1,
@@ -47,7 +52,7 @@ const GeneratorSlicer = {
 
 module.exports = {
   DEFAULT_COMMAND,
-  DEFAULT_PORT,
+  DefaultPort,
   USER_ARGV_INDEX,
   DEFAULT_COUNT,
   ExitCode,
