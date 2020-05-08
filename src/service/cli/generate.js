@@ -33,7 +33,7 @@ const generateOffers = (count, titles, categories, sentences) => (
     picture: getPictureFileName(getRandomInt(PictureRestrict.MIN, PictureRestrict.MAX)),
     title: getTitle(titles),
     type: getOfferType(OfferType),
-    sum: getRandomInt(SumRestrict.min, SumRestrict.max)
+    sum: getRandomInt(SumRestrict.MIN, SumRestrict.MAX)
   }))
 );
 
