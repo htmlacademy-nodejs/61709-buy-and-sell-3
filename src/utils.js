@@ -27,11 +27,27 @@ const readContent = async (filePath) => {
   }
 };
 
+const readContentJSON = async (filePath) => {
+  try {
+    const content = await fs.readFile(filePath, `utf8`);
+
+    if (!content.trim().length) {
+      return [];
+    }
+
+    return JSON.parse(content);
+  } catch (err) {
+    console.error(chalk.red(err));
+    return [];
+  }
+};
+
 const printNumWithLead0 = (number) => number < 10 ? `0${number}` : number;
 
 module.exports = {
   getRandomInt,
   shuffle,
   readContent,
+  readContentJSON,
   printNumWithLead0
 };
