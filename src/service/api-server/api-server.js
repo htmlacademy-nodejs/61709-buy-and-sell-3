@@ -2,16 +2,18 @@
 
 const express = require(`express`);
 const chalk = require(`chalk`);
-const offersRouter = require(`../routes/offersRoutes`);
+
 const {
   HttpCode,
-  ExitCode
+  ExitCode,
+  API_PREFIX
 } = require(`../../constants`);
+
+const apiRoutes = require(`../api`);
 const app = express();
 
 app.use(express.json());
-
-app.use(`/offers`, offersRouter);
+app.use(API_PREFIX, apiRoutes);
 
 app.use((req, res) => {
   const notFoundMessageText = `Not found`;
