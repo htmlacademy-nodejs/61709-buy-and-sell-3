@@ -1,9 +1,9 @@
 'use strict';
 
 const {Router} = require(`express`);
-const {categoryRoutesInit} = require(`../api/category`);
-const {offerRoutesInit} = require(`./offer`);
-const {searchRoutesInit} = require(`../api/search`);
+const {getCategoryRouter} = require(`../api/category`);
+const {getOffersRouter} = require(`./offer`);
+const {getSearchRouter} = require(`../api/search`);
 
 const {getMockData} = require(`../lib/get-mock-data`);
 
@@ -14,16 +14,27 @@ const {
   CommentService,
 } = require(`../data-service`);
 
-const app = new Router();
+const appRouter = new Router();
 
 (async () => {
   const mockData = await getMockData();
-
-  categoryRoutesInit(app, new CategoryService(mockData));
-  searchRoutesInit(app, new SearchService(mockData));
-  offerRoutesInit(app, new OfferService(mockData), new CommentService());
+  appRouter.use(
+      `/categories`,
+      getCategoryRouter(new CategoryService(mockData))
+  );
+  appRouter.use(
+      `/search`,
+      getSearchRouter(new SearchService(mockData))
+  );
+  appRouter.use(
+      `/offers`,
+      getOffersRouter(
+          new OfferService(mockData),
+          new CommentService()
+      )
+  );
 })();
 
-module.exports = app;
+module.exports = appRouter;
 
 

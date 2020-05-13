@@ -1,12 +1,11 @@
 'use strict';
 
 const {Router} = require(`express`);
-const {HttpCode} = require(`../../constants`);
+const {HttpCode} = require(`../service-constants`);
 
 const searchRouter = new Router();
 
-const searchRoutesInit = (app, searchService) => {
-  app.use(`/search`, searchRouter);
+const getSearchRouter = (searchService) => {
 
   searchRouter.get(`/`, (req, res) => {
     const {query} = req.query;
@@ -16,15 +15,16 @@ const searchRoutesInit = (app, searchService) => {
       .json({
         error: true,
         status: HttpCode.BAD_REQUEST,
-        message: `Incorrect data send`
+        message: `Incorrect data sent`
       });
     }
 
     const searchResults = searchService.findAll(query);
-    const searchStatus = searchResults.length > 0 ? HttpCode.SUCCESS : HttpCode.NOT_FOUND;
 
-    return res.status(searchStatus).json(searchResults);
+    return res.status(HttpCode.SUCCESS).json(searchResults);
   });
+
+  return searchRouter;
 };
 
-module.exports = {searchRoutesInit};
+module.exports = {getSearchRouter};

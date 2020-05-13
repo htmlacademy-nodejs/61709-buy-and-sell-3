@@ -5,12 +5,13 @@ const chalk = require(`chalk`);
 
 const {
   HttpCode,
-  ExitCode,
   API_PREFIX
-} = require(`../../constants`);
+} = require(`../service-constants`);
+const {ExitCode} = require(`../../constants`);
 
 const apiRoutes = require(`../api`);
 const app = express();
+app.disable(`x-powered-by`);
 
 app.use(express.json());
 app.use(API_PREFIX, apiRoutes);

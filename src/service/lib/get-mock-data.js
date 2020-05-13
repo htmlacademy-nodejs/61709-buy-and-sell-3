@@ -1,10 +1,8 @@
 'use strict';
 
 const chalk = require(`chalk`);
-const {
-  FilePath,
-  ExitCode
-} = require(`../../constants`);
+const {ExitCode} = require(`../../constants`);
+const {FilePath} = require(`../service-constants`);
 const {readContentJSON} = require(`../../utils`);
 
 const getMockData = async () => {

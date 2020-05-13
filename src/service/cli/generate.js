@@ -12,7 +12,6 @@ const {
 } = require(`../../utils`);
 
 const {
-  ExitCode,
   DEFAULT_COUNT,
   MAX_ID_LENGTH,
   MAX_COMMENTS_COUNT,
@@ -21,7 +20,9 @@ const {
   SumRestrict,
   PictureRestrict,
   GeneratorSlicer
-} = require(`../../constants`);
+} = require(`../service-constants`);
+
+const {ExitCode} = require(`../../constants`);
 
 const getPictureFileName = (number) => `item${printNumWithLead0(number)}.jpg`;
 const getCategory = (categories) => [categories[getRandomInt(0, categories.length - 1)]];
