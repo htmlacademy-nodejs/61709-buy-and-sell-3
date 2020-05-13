@@ -2,11 +2,11 @@
 
 const {Cli} = require(`./cli`);
 
+const {ExitCode} = require(`../constants`);
 const {
   DEFAULT_COMMAND,
-  USER_ARGV_INDEX,
-  ExitCode
-} = require(`../constants`);
+  USER_ARGV_INDEX
+} = require(`./service-constants`);
 
 const userArguments = process.argv.slice(USER_ARGV_INDEX);
 const [userCommand, userInputValue] = userArguments;
