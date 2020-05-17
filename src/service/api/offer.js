@@ -23,7 +23,7 @@ const getOffersRouter = (offerService, commentService) => {
         .json({
           error: true,
           status: HttpCode.NOT_FOUND,
-          message: `Offer with ID ${offerId} is not found`
+          message: `Offer with id: ${offerId} is not found`
         });
     }
 
@@ -79,7 +79,7 @@ const getOffersRouter = (offerService, commentService) => {
         .json({
           error: true,
           status: HttpCode.NOT_FOUND,
-          message: `Offer with ID ${offerId} doesn't exist`
+          message: `Offer with id: ${offerId} is not found`
         });
     }
 
@@ -97,7 +97,7 @@ const getOffersRouter = (offerService, commentService) => {
         .json({
           error: true,
           status: HttpCode.NOT_FOUND,
-          message: `Offer with ID ${offerId} doesn't exist`
+          message: `Offer with id: ${offerId} is not found`
         });
     }
 
@@ -108,7 +108,7 @@ const getOffersRouter = (offerService, commentService) => {
         .json({
           error: true,
           status: HttpCode.NOT_FOUND,
-          message: `Comment not found`
+          message: `Comment with id: ${commentId} is not found`
         });
     }
 
@@ -124,7 +124,7 @@ const getOffersRouter = (offerService, commentService) => {
         .json({
           error: true,
           status: HttpCode.NOT_FOUND,
-          message: `Offer with ID ${offerId} doesn't exist`
+          message: `Offer with id: ${offerId} is not found`
         });
     }
 
