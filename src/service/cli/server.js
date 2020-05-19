@@ -1,8 +1,8 @@
 'use strict';
 
-const {getServer} = require(`../api-server/api-server`);
+const {getServer} = require(`../api-server`);
 const {getLogger} = require(`../logger`);
-const logger = getLogger();
+
 const {
   DefaultPort,
   ExitCode
@@ -12,8 +12,8 @@ module.exports = {
   name: `--server`,
   async run(customPort) {
     const port = Number.parseInt(customPort, 10) || DefaultPort.SERVICE_SERVER;
-
     const server = await getServer();
+    const logger = getLogger();
 
     server.listen(port, (err) => {
       if (err) {

@@ -2,8 +2,7 @@
 
 const express = require(`express`);
 const {getLogger} = require(`../logger`);
-const logger = getLogger();
-const pino = require(`express-pino-logger`)({logger});
+const expressPinoLogger = require(`express-pino-logger`);
 const {
   HttpCode,
   API_PREFIX
@@ -25,11 +24,12 @@ const {
 
 const getServer = async () => {
   const server = express();
+  const logger = getLogger();
   const mockData = await getMockData();
 
   server.disable(`x-powered-by`);
+  server.use(expressPinoLogger({logger}));
   server.use(express.json());
-  server.use(pino);
 
   server.use((req, res, next) => {
     logger.debug(`Start request to url ${req.url}`);
@@ -55,7 +55,7 @@ const getServer = async () => {
   server.use((req, res) => {
     const notFoundMessageText = `Not found`;
 
-    logger.error(`End request with error ${HttpCode.NOT_FOUND}`);
+    logger.error(`End request (${req.url}) with error ${HttpCode.NOT_FOUND}. `);
     return res.status(HttpCode.NOT_FOUND)
     .json({
       error: true,

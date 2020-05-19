@@ -4,8 +4,8 @@
   "description": "«Куплю. Продам»",
   "main": "./src/service/service.js",
   "scripts": {
-    "test": "npm run test::jest",
-    "test::jest": "jest",
+    "test": "npm run test::rest",
+    "test::rest": "jest",
     "eslint": "eslint --ext .js src/",
     "start": "node ./src/service/service.js",
     "server": "cross-env LOG_LEVEL=error nodemon ./src/service/service.js --server 3000 | pino-pretty > ./src/service/logs/app.log",
