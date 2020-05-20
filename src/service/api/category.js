@@ -7,8 +7,8 @@ const categoryRouter = new Router();
 
 const getCategoryRouter = (categoryService) => {
 
-  categoryRouter.get(`/`, async (req, res) => {
-    const categories = await categoryService.findAll();
+  categoryRouter.get(`/`, (req, res) => {
+    const categories = categoryService.findAll();
     return res.status(HttpCode.SUCCESS).json(categories);
   });
 

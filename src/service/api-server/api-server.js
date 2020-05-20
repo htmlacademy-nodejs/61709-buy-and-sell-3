@@ -1,43 +1,71 @@
 'use strict';
 
 const express = require(`express`);
-const chalk = require(`chalk`);
-
+const {getLogger} = require(`../logger`);
+const expressPinoLogger = require(`express-pino-logger`);
 const {
   HttpCode,
   API_PREFIX
 } = require(`../service-constants`);
-const {ExitCode} = require(`../../constants`);
+const {getMockData} = require(`../lib/get-mock-data`);
 
-const apiRoutes = require(`../api`);
-const app = express();
-app.disable(`x-powered-by`);
+const {
+  getCategoryRouter,
+  getSearchRouter,
+  getOffersRouter
+} = require(`../api`);
 
-app.use(express.json());
-app.use(API_PREFIX, apiRoutes);
+const {
+  CategoryService,
+  SearchService,
+  OfferService,
+  CommentService,
+} = require(`../data-service`);
 
-app.use((req, res) => {
-  const notFoundMessageText = `Not found`;
-  res.status(HttpCode.NOT_FOUND)
-  .json({
-    error: true,
-    status: HttpCode.NOT_FOUND,
-    message: notFoundMessageText
+const getServer = async () => {
+  const server = express();
+  const logger = getLogger();
+  const mockData = await getMockData();
+
+  server.disable(`x-powered-by`);
+  server.use(expressPinoLogger({logger}));
+  server.use(express.json());
+
+  server.use((req, res, next) => {
+    logger.debug(`Start request to url ${req.url}`);
+    next();
   });
-});
 
-const apiServerInit = (port) => {
-  app.listen(port, (err) => {
-    if (err) {
-      console.error(chalk.red(`Ошибка при создании сервера`, err));
-      process.exit(ExitCode.ERROR);
-    }
+  server.use(
+      `${API_PREFIX}/categories`,
+      getCategoryRouter(new CategoryService(mockData))
+  );
+  server.use(
+      `${API_PREFIX}/search`,
+      getSearchRouter(new SearchService(mockData))
+  );
+  server.use(
+      `${API_PREFIX}/offers`,
+      getOffersRouter(
+          new OfferService(mockData),
+          new CommentService()
+      )
+  );
 
-    return console.info(chalk.green(`Ожидаю соединений на порту: ${port}`));
+  server.use((req, res) => {
+    const notFoundMessageText = `Not found`;
+
+    logger.error(`End request (${req.url}) with error ${HttpCode.NOT_FOUND}. `);
+    return res.status(HttpCode.NOT_FOUND)
+    .json({
+      error: true,
+      status: HttpCode.NOT_FOUND,
+      message: notFoundMessageText
+    });
   });
+
+  return server;
 };
 
-module.exports = {
-  apiServerInit
-};
+module.exports = {getServer};
 
