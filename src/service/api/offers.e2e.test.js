@@ -3,7 +3,7 @@
 const request = require(`supertest`);
 const {getServer} = require(`../api-server`);
 const {getMockData} = require(`../lib/get-mock-data`);
-const {HttpCode} = require(`../service-constants`);
+const {HttpCode} = require(`../../constants`);
 
 let server;
 let mockData;

@@ -8,6 +8,7 @@ const myRoutes = require(`./routes/my-routes`);
 const mainRoutes = require(`./routes/main-routes`);
 
 const {
+  HttpCode,
   DefaultPort,
   ExitCode,
   PUBLIC_DIR
@@ -16,6 +17,7 @@ const {
 const app = express();
 
 app.use(express.static(path.resolve(__dirname, PUBLIC_DIR)));
+app.use(express.urlencoded({extended: false}));
 
 app.set(`views`, path.resolve(__dirname, `templates`));
 app.set(`view engine`, `pug`);
@@ -24,8 +26,16 @@ app.use(`/`, mainRoutes);
 app.use(`/my`, myRoutes);
 app.use(`/offers`, offersRoutes);
 
-app.use((req, res) => res.status(400).render(`errors/400`));
-app.use((err, req, res) => res.status(500).render(`errors/500`));
+app.use((req, res) => res.status(404).render(`errors/404`));
+app.use((err, req, res, next) => {
+
+  if (err) {
+    console.error(chalk.red(err));
+    return res.status(HttpCode.INTERNAL_SERVER_ERROR).render(`errors/500`);
+  }
+
+  return next();
+});
 
 app.listen(DefaultPort.FRONT_SERVER, (err) => {
 

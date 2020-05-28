@@ -1,8 +1,8 @@
 'use strict';
 
-const {HttpCode} = require(`../service-constants`);
+const {HttpCode} = require(`../../constants`);
 
-const offerKeys = [`category`, `description`, `picture`, `title`, `type`, `sum`, `comments`];
+const offerKeys = [`category`, `description`, `picture`, `title`, `type`, `sum`];
 
 module.exports = (req, res, next) => {
   const newOffer = req.body;
@@ -10,7 +10,7 @@ module.exports = (req, res, next) => {
   const keysExists = offerKeys.every((key) => keys.includes(key));
 
   if (!keysExists) {
-    res.status(HttpCode.BAD_REQUEST)
+    return res.status(HttpCode.BAD_REQUEST)
       .json({
         error: true,
         status: HttpCode.BAD_REQUEST,
@@ -18,5 +18,5 @@ module.exports = (req, res, next) => {
       });
   }
 
-  next();
+  return next();
 };

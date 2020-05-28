@@ -1,7 +1,7 @@
 'use strict';
 
 const {Router} = require(`express`);
-const {HttpCode} = require(`../service-constants`);
+const {HttpCode} = require(`../../constants`);
 
 const searchRouter = new Router();
 
@@ -10,7 +10,7 @@ const getSearchRouter = (searchService) => {
   searchRouter.get(`/`, (req, res) => {
     const {query} = req.query;
 
-    if (!query) {
+    if (typeof (query) === `undefined`) {
       return res.status(HttpCode.BAD_REQUEST)
       .json({
         error: true,

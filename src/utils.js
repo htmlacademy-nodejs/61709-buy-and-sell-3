@@ -1,6 +1,5 @@
 'use strict';
 const fs = require(`fs`).promises;
-const chalk = require(`chalk`);
 
 const getRandomInt = (min, max) => {
   min = Math.ceil(min);
@@ -22,7 +21,6 @@ const readContent = async (filePath) => {
     const content = await fs.readFile(filePath, `utf8`);
     return content.trim().split(`\n`);
   } catch (err) {
-    console.error(chalk.red(err));
     return [];
   }
 };
@@ -37,17 +35,22 @@ const readContentJSON = async (filePath) => {
 
     return JSON.parse(content);
   } catch (err) {
-    console.error(chalk.red(err));
     return [];
   }
 };
 
 const printNumWithLead0 = (number) => number < 10 ? `0${number}` : number;
 
+const makePriceWithSpaces = (price) => {
+  let priceStr = price.toString();
+  return priceStr.length > 4 ? priceStr.replace(/\B(?=(\d{3})+(?!\d))/g, ` `) : price;
+};
+
 module.exports = {
   getRandomInt,
   shuffle,
   readContent,
   readContentJSON,
-  printNumWithLead0
+  printNumWithLead0,
+  makePriceWithSpaces
 };

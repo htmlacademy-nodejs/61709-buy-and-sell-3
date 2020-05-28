@@ -2,7 +2,7 @@
 
 const request = require(`supertest`);
 const {getServer} = require(`../api-server`);
-const {HttpCode} = require(`../service-constants`);
+const {HttpCode} = require(`../../constants`);
 
 describe(`Category API end-to-end tests`, () => {
   test(`Get all categories with status code 200`, async () => {
