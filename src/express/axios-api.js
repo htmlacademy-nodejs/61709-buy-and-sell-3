@@ -12,11 +12,7 @@ const createAPI = () => {
     return response.data;
   };
 
-  const onFail = (err) => {
-    throw err;
-  };
-
-  api.interceptors.response.use(onSuccess, onFail);
+  api.interceptors.response.use(onSuccess);
 
   return api;
 };

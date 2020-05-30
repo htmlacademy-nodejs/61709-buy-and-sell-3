@@ -1,31 +1,29 @@
 'use strict';
 
 const {Router} = require(`express`);
-const {createAPI} = require(`../axios-api`);
-
 const myRouter = new Router();
-const api = createAPI();
 
-myRouter.get(`/`, async (req, res, next) => {
-  try {
-    const offers = await api.get(`/offers`);
-    return res.render(`my-tickets`, {offers});
-  } catch (err) {
-    next(err);
-  }
+const getMyRouter = (service) => {
 
-  return next();
-});
+  myRouter.get(`/`, async (req, res, next) => {
+    try {
+      const offers = await service.getAllOffers();
+      return res.render(`my-tickets`, {offers});
+    } catch (err) {
+      return next(err);
+    }
+  });
 
-myRouter.get(`/comments`, async (req, res, next) => {
-  try {
-    const offers = await api.get(`/offers`);
-    return res.render(`comments`, {offers: offers.slice(0, 3)});
-  } catch (err) {
-    next(err);
-  }
+  myRouter.get(`/comments`, async (req, res, next) => {
+    try {
+      const offers = await service.getAllOffers();
+      return res.render(`comments`, {offers: offers.slice(0, 3)});
+    } catch (err) {
+      return next(err);
+    }
+  });
 
-  return next();
-});
+  return myRouter;
+};
 
-module.exports = myRouter;
+module.exports = {getMyRouter};

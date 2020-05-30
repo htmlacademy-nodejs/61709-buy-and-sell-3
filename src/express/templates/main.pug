@@ -4,16 +4,23 @@ include partials/offers-list.pug
 
 block content
   main.page-content
-    +categories(categories)
-    section.tickets-list
-      h2.visually-hidden Самые новые предложения
-      .tickets-list__wrapper
-        .tickets-list__header
-          p.tickets-list__title Самое свежее
-        +offers-list(offers)
-    section.tickets-list
-      h2.visually-hidden Самые обсуждаемые предложения
-      .tickets-list__wrapper
-        .tickets-list__header
-          p.tickets-list__title Самые обсуждаемые
-        +offers-list(offers)
+    if offers.length === 0
+      .message
+        .message__text
+          p На сайте еще не опубликовано ни одного объявления.
+        a.message__link.btn.btn--big(href="/register") Вход и регистрация
+    else
+      +categories(categories)
+      section.tickets-list
+        h2.visually-hidden Самые новые предложения
+        .tickets-list__wrapper
+          .tickets-list__header
+            p.tickets-list__title Самое свежее
+          +offers-list(offers)
+      section.tickets-list
+        h2.visually-hidden Самые обсуждаемые предложения
+        .tickets-list__wrapper
+          .tickets-list__header
+            p.tickets-list__title Самые обсуждаемые
+          +offers-list(offers)
+

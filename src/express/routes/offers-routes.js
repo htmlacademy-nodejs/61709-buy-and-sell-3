@@ -1,82 +1,79 @@
 'use strict';
 
 const {Router} = require(`express`);
-const {check, validationResult} = require(`express-validator`);
+const {validationResult} = require(`express-validator`);
+const {newOfferFormValidator} = require(`../form-validation`);
 const {fileUploader} = require(`../file-uploader`);
-const {createAPI} = require(`../axios-api`);
+
+const MAX_FILE_SIZE = 15 * 1024 * 1024;
+const MEGABYTE_IN_BYTES = 1048576;
 
 const offersRouter = new Router();
-const api = createAPI();
 
-offersRouter.get(`/category/:id`, (req, res) => res.render(`category`));
+const getOffersRouter = (service) => {
 
-offersRouter.get(`/add`, async (req, res, next) => {
-  try {
-    const categories = await api.get(`/categories`);
-    return res.render(`new-ticket`, {categories});
-  } catch (err) {
-    next(err);
-  }
+  offersRouter.get(`/category/:id`, (req, res) => res.render(`category`));
 
-  return next();
-});
-
-offersRouter.post(`/add`, fileUploader.single(`picture`), [
-  check(`title`, `Введите название`).trim().notEmpty(),
-  check(`description`, `Введите описание (Минимум 55 символов)`).trim().notEmpty().bail().isLength({min: 55}),
-  check(`category`, `Выберите минимум одну категорию`).exists().bail().isArray({min: 1}),
-  check(`sum`, `Введите цену`).trim().notEmpty(),
-  check(`type`, `Выберите тип предложения`).notEmpty()
-], async (req, res, next) => {
-  try {
-    const file = req.file;
-    const errors = validationResult(req).errors;
-    let formFieldsData = req.body;
-
-    if (!file) {
-      errors.push({
-        msg: `Файл не выбран или неверный формат (только jpg/jpeg/png)`
-      });
-    } else {
-      formFieldsData = {
-        ...formFieldsData,
-        picture: {
-          background: `01`,
-          image: file.filename,
-          image2x: file.filename
-        }
-      };
+  offersRouter.get(`/add`, async (req, res, next) => {
+    try {
+      const categories = await service.getAllCategories();
+      return res.render(`new-ticket`, {categories});
+    } catch (err) {
+      return next(err);
     }
+  });
 
-    if (Object.keys(errors).length) {
-      const categories = await api.get(`/categories`);
-      return res.render(`new-ticket`, {errors, categories, formFieldsData});
+  offersRouter.post(`/add`, fileUploader.single(`picture`), newOfferFormValidator(), async (req, res, next) => {
+    try {
+      const errorFormatter = ({msg}) => ({msg});
+      const errors = validationResult(req).formatWith(errorFormatter).array();
+      const file = req.file;
+      let formFieldsData = req.body;
+
+      if (!file || file.size > MAX_FILE_SIZE) {
+        errors.push({
+          msg: `Файл не выбран, неверный формат (только jpg/jpeg/png),
+          большой размер файла (максимально: ${MAX_FILE_SIZE / MEGABYTE_IN_BYTES} мб)`
+        });
+      } else {
+        formFieldsData = {
+          ...formFieldsData,
+          picture: {
+            background: `01`,
+            image: file.filename,
+            image2x: file.filename
+          }
+        };
+      }
+
+      if (Object.keys(errors).length) {
+        const categories = await service.getAllCategories();
+        return res.render(`new-ticket`, {errors, categories, formFieldsData});
+      }
+
+      await service.createNewOffer(formFieldsData);
+
+      return res.redirect(`/my`);
+    } catch (err) {
+      return next(err);
     }
+  });
 
-    await api.post(`/offers`, formFieldsData);
+  offersRouter.get(`/edit/:id`, async (req, res, next) => {
+    try {
+      const offerId = req.params.id;
+      const offer = await service.getOfferById(offerId);
+      const categories = await service.getAllCategories();
 
-    return res.redirect(`/my`);
-  } catch (err) {
-    next(err);
-  }
+      return res.render(`ticket-edit`, {offer, categories});
+    } catch (err) {
+      return next(err);
+    }
+  });
 
-  return next();
-});
+  offersRouter.get(`/:id`, (req, res) => res.render(`ticket`));
 
-offersRouter.get(`/edit/:id`, async (req, res, next) => {
-  try {
-    const offerId = req.params.id;
-    const offer = await api.get(`/offers/${offerId}`);
-    const categories = await api.get(`/categories`);
+  return offersRouter;
+};
 
-    return res.render(`ticket-edit`, {offer, categories});
-  } catch (err) {
-    next(err);
-  }
-
-  return next();
-});
-
-offersRouter.get(`/:id`, (req, res) => res.render(`ticket`));
-
-module.exports = offersRouter;
+module.exports = {getOffersRouter};

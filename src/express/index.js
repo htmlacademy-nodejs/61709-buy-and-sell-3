@@ -1,11 +1,15 @@
 'use strict';
 
 const path = require(`path`);
-const chalk = require(`chalk`);
 const express = require(`express`);
-const offersRoutes = require(`./routes/offers-routes`);
-const myRoutes = require(`./routes/my-routes`);
-const mainRoutes = require(`./routes/main-routes`);
+const chalk = require(`chalk`);
+const ApiService = require(`./api-sevice/service`);
+
+const {
+  getOffersRouter,
+  getMyRouter,
+  getMainRouter
+} = require(`./routes`);
 
 const {
   HttpCode,
@@ -14,6 +18,7 @@ const {
   PUBLIC_DIR
 } = require(`../constants`);
 
+const service = new ApiService();
 const app = express();
 
 app.use(express.static(path.resolve(__dirname, PUBLIC_DIR)));
@@ -22,16 +27,21 @@ app.use(express.urlencoded({extended: false}));
 app.set(`views`, path.resolve(__dirname, `templates`));
 app.set(`view engine`, `pug`);
 
-app.use(`/`, mainRoutes);
-app.use(`/my`, myRoutes);
-app.use(`/offers`, offersRoutes);
+app.use(`/`, getMainRouter(service));
+app.use(`/my`, getMyRouter(service));
+app.use(`/offers`, getOffersRouter(service));
 
-app.use((req, res) => res.status(404).render(`errors/404`));
+app.use((req, res) => res.status(HttpCode.NOT_FOUND).render(`errors/404`));
 app.use((err, req, res, next) => {
 
   if (err) {
     console.error(chalk.red(err));
-    return res.status(HttpCode.INTERNAL_SERVER_ERROR).render(`errors/500`);
+
+    if (err.response && err.response.status === HttpCode.NOT_FOUND) {
+      res.status(HttpCode.NOT_FOUND).render(`errors/404`);
+    } else {
+      res.status(HttpCode.INTERNAL_SERVER_ERROR).render(`errors/500`);
+    }
   }
 
   return next();

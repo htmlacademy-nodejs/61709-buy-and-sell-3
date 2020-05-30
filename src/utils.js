@@ -46,11 +46,18 @@ const makePriceWithSpaces = (price) => {
   return priceStr.length > 4 ? priceStr.replace(/\B(?=(\d{3})+(?!\d))/g, ` `) : price;
 };
 
+const getMostDiscussedOffers = (offers) => {
+  return offers.filter((offer) => offer.comments.length > 0)
+                .sort((a, b) => b.comments.length - a.comments.length)
+                .slice(0, 8);
+};
+
 module.exports = {
   getRandomInt,
   shuffle,
   readContent,
   readContentJSON,
   printNumWithLead0,
-  makePriceWithSpaces
+  makePriceWithSpaces,
+  getMostDiscussedOffers
 };

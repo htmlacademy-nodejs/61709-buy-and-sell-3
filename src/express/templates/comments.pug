@@ -13,7 +13,7 @@ block content
                 span.announce-card__info
                   span.announce-card__price= `₽ ${offer.sum}`
                   span.announce-card__type= `${offer.type === 'buy' ? 'Куплю' : 'Продам'}`
-            if offer.comments.length > 0
+            if offer.comments && offer.comments.length > 0
               ul.comments-list
                 each comment in offer.comments
                   li.js-card
