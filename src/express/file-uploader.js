@@ -2,6 +2,7 @@
 
 const path = require(`path`);
 const multer = require(`multer`);
+const VALID_MIME_TYPES = [`image/png`, `image/jpg`, `image/jpeg`];
 
 const storageConfig = multer.diskStorage({
   destination: (req, file, cb) =>{
@@ -13,7 +14,7 @@ const storageConfig = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  if ([`image/png`, `image/jpg`, `image/jpeg`].includes(file.mimetype)) {
+  if (VALID_MIME_TYPES.includes(file.mimetype)) {
     cb(null, true);
   } else {
     cb(null, false);

@@ -3,6 +3,7 @@
 const path = require(`path`);
 const express = require(`express`);
 const chalk = require(`chalk`);
+const {createAPI} = require(`./axios-api`);
 const ApiService = require(`./api-sevice/service`);
 
 const {
@@ -18,7 +19,7 @@ const {
   PUBLIC_DIR
 } = require(`../constants`);
 
-const service = new ApiService();
+const service = new ApiService(createAPI());
 const app = express();
 
 app.use(express.static(path.resolve(__dirname, PUBLIC_DIR)));

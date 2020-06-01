@@ -2,9 +2,10 @@
 
 const {Router} = require(`express`);
 const {getMostDiscussedOffers} = require(`../../utils`);
-const mainRouter = new Router();
 
 const getMainRouter = (service) => {
+
+  const mainRouter = new Router();
 
   mainRouter.get(`/`, async (req, res, next) => {
     try {
@@ -28,7 +29,7 @@ const getMainRouter = (service) => {
   mainRouter.get(`/search`, async (req, res, next) => {
     try {
       const {query} = req.query;
-      const searchResult = await service.getSearchResult(query);
+      const searchResult = await service.searchOffers(query);
       const offers = await service.getAllOffers();
 
       return res.render(`search-result`, {

@@ -1,28 +1,29 @@
 'use strict';
 
-const {createAPI} = require(`../axios-api`);
-const api = createAPI();
-
 class ApiService {
 
+  constructor(api) {
+    this._api = api;
+  }
+
   async getAllOffers() {
-    return await api.get(`/offers`);
+    return await this._api.get(`/offers`);
   }
 
   async getOfferById(offerId) {
-    return await api.get(`/offers/${offerId}`);
+    return await this._api.get(`/offers/${offerId}`);
   }
 
   async createNewOffer(offerData) {
-    return await api.post(`/offers`, offerData);
+    return await this._api.post(`/offers`, offerData);
   }
 
   async getAllCategories() {
-    return await api.get(`/categories`);
+    return await this._api.get(`/categories`);
   }
 
-  async getSearchResult(query) {
-    return await api.get(`/search?query=${encodeURI(query)}`);
+  async searchOffers(query) {
+    return await this._api.get(`/search?query=${encodeURI(query)}`);
   }
 
 }

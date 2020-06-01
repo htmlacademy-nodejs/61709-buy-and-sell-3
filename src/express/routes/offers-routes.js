@@ -2,15 +2,17 @@
 
 const {Router} = require(`express`);
 const {validationResult} = require(`express-validator`);
-const {newOfferFormValidator} = require(`../form-validation`);
+const {newOfferFormFieldsRules} = require(`../form-validation`);
 const {fileUploader} = require(`../file-uploader`);
 
 const MAX_FILE_SIZE = 15 * 1024 * 1024;
 const MEGABYTE_IN_BYTES = 1048576;
 
-const offersRouter = new Router();
+const upload = fileUploader.single(`picture`);
 
 const getOffersRouter = (service) => {
+
+  const offersRouter = new Router();
 
   offersRouter.get(`/category/:id`, (req, res) => res.render(`category`));
 
@@ -23,7 +25,7 @@ const getOffersRouter = (service) => {
     }
   });
 
-  offersRouter.post(`/add`, fileUploader.single(`picture`), newOfferFormValidator(), async (req, res, next) => {
+  offersRouter.post(`/add`, upload, ...newOfferFormFieldsRules, async (req, res, next) => {
     try {
       const errorFormatter = ({msg}) => ({msg});
       const errors = validationResult(req).formatWith(errorFormatter).array();

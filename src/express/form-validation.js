@@ -2,7 +2,7 @@
 
 const {check} = require(`express-validator`);
 
-const newOfferFormValidator = () => ([
+const newOfferFormFieldsRules = [
   check(`title`, `Введите название предложения`).trim().notEmpty(),
   check(`description`)
     .trim()
@@ -20,6 +20,6 @@ const newOfferFormValidator = () => ([
     .isNumeric()
     .withMessage(`Значение в поле цена должно быть числом`),
   check(`type`, `Выберите тип предложения (покупка/продажа)`).notEmpty()
-]);
+];
 
-module.exports = {newOfferFormValidator};
+module.exports = {newOfferFormFieldsRules};
