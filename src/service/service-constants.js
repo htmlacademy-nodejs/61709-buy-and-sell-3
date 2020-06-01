@@ -7,16 +7,6 @@ const MAX_ID_LENGTH = 6;
 const MAX_COMMENTS_COUNT = 4;
 const API_PREFIX = `/api`;
 
-const HttpCode = {
-  SUCCESS: 200,
-  CREATED: 201,
-  BAD_REQUEST: 400,
-  FORBIDDEN: 403,
-  NOT_FOUND: 404,
-  UNAUTHORIZED: 401,
-  INTERNAL_SERVER_ERROR: 500
-};
-
 const FilePath = {
   MOCKS: `mocks.json`,
   SENTENCES: `./data/sentences.txt`,
@@ -26,7 +16,7 @@ const FilePath = {
 };
 
 const OfferType = {
-  OFFER: `offer`,
+  BUY: `buy`,
   SALE: `sale`
 };
 
@@ -56,6 +46,5 @@ module.exports = {
   OfferType,
   SumRestrict,
   PictureRestrict,
-  GeneratorSlicer,
-  HttpCode,
+  GeneratorSlicer
 };

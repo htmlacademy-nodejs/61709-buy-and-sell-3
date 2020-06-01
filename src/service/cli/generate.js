@@ -8,7 +8,8 @@ const {
   getRandomInt,
   shuffle,
   readContent,
-  printNumWithLead0
+  printNumWithLead0,
+  makePriceWithSpaces
 } = require(`../../utils`);
 
 const {
@@ -24,10 +25,18 @@ const {
 
 const {ExitCode} = require(`../../constants`);
 
-const getPictureFileName = (number) => `item${printNumWithLead0(number)}.jpg`;
-const getCategory = (categories) => [categories[getRandomInt(0, categories.length - 1)]];
+const getOfferPrice = (price) => makePriceWithSpaces(price);
+const getPictureFileName = (number) => {
+  const numWithLead0 = `${printNumWithLead0(number)}`;
+  return {
+    background: numWithLead0,
+    image: `item${numWithLead0}.jpg`,
+    image2x: `item${numWithLead0}@2x.jpg`
+  };
+};
+const getCategory = (categories) => shuffle(categories).slice(0, getRandomInt(1, categories.length - 1));
 const getDescription = (sentences) => shuffle(sentences).slice(GeneratorSlicer.START, GeneratorSlicer.END).join(` `);
-const getOfferType = (offerType) => Object.keys(offerType)[Math.floor(Math.random() * Object.keys(offerType).length)];
+const getOfferType = (offerType) => offerType[Object.keys(offerType)[Math.floor(Math.random() * Object.keys(offerType).length)]];
 const getTitle = (titles) => titles[getRandomInt(0, titles.length - 1)];
 const getComments = (count, comments) => (
   Array(count).fill({}).map(() => ({
@@ -44,7 +53,7 @@ const generateOffers = (count, titles, categories, sentences, comments) => (
     picture: getPictureFileName(getRandomInt(PictureRestrict.MIN, PictureRestrict.MAX)),
     title: getTitle(titles),
     type: getOfferType(OfferType),
-    sum: getRandomInt(SumRestrict.MIN, SumRestrict.MAX),
+    sum: getOfferPrice(getRandomInt(SumRestrict.MIN, SumRestrict.MAX)),
     comments: getComments(getRandomInt(1, MAX_COMMENTS_COUNT), comments)
   }))
 );

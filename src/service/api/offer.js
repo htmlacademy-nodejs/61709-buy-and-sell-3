@@ -1,7 +1,7 @@
 'use strict';
 
 const {Router} = require(`express`);
-const {HttpCode} = require(`../service-constants`);
+const {HttpCode} = require(`../../constants`);
 const offerValidator = require(`../middlewares/offer-validator`);
 const commentValidator = require(`../middlewares/comment-validator`);
 
@@ -11,7 +11,7 @@ const getOffersRouter = (offerService, commentService) => {
 
   offersRouter.get(`/`, (req, res) => {
     const offers = offerService.findAll();
-    res.status(HttpCode.SUCCESS).json(offers);
+    return res.status(HttpCode.SUCCESS).json(offers);
   });
 
   offersRouter.get(`/:offerId`, (req, res) => {

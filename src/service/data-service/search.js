@@ -6,7 +6,7 @@ class SearchService {
   }
 
   findAll(searchText) {
-    return this._offers.filter((offer) => offer.title.includes(searchText));
+    return searchText ? this._offers.filter((offer) => offer.title.includes(searchText)) : [];
   }
 
 }

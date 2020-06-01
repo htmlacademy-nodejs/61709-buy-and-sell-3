@@ -3,10 +3,8 @@
 const express = require(`express`);
 const {getLogger} = require(`../logger`);
 const expressPinoLogger = require(`express-pino-logger`);
-const {
-  HttpCode,
-  API_PREFIX
-} = require(`../service-constants`);
+const {API_PREFIX} = require(`../service-constants`);
+const {HttpCode} = require(`../../constants`);
 const {getMockData} = require(`../lib/get-mock-data`);
 
 const {
