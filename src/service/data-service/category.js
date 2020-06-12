@@ -6,12 +6,11 @@ class CategoryService {
   }
 
   findAll() {
-    const categories = this._offers.reduce((categoriesList, offer) => {
-      categoriesList.add(...offer.category);
-      return categoriesList;
-    }, new Set());
-
-    return [...categories];
+    return [
+      ...new Set(
+          this._offers.reduce((categoriesList, article) => categoriesList.concat(article.category), [])
+      )
+    ];
   }
 }
 
