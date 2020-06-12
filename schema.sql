@@ -5,7 +5,7 @@
 -- Dumped from database version 12.3
 -- Dumped by pg_dump version 12.3
 
--- Started on 2020-06-10 20:16:30
+-- Started on 2020-06-12 10:48:43
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -20,7 +20,7 @@ SET row_security = off;
 
 DROP DATABASE "buy-and-sell";
 --
--- TOC entry 2863 (class 1262 OID 16543)
+-- TOC entry 2870 (class 1262 OID 16614)
 -- Name: buy-and-sell; Type: DATABASE; Schema: -; Owner: -
 --
 
@@ -40,12 +40,10 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-SET default_tablespace = '';
-
 SET default_table_access_method = heap;
 
 --
--- TOC entry 207 (class 1259 OID 16572)
+-- TOC entry 202 (class 1259 OID 16729)
 -- Name: categories; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -56,7 +54,7 @@ CREATE TABLE public.categories (
 
 
 --
--- TOC entry 206 (class 1259 OID 16570)
+-- TOC entry 203 (class 1259 OID 16732)
 -- Name: categories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -69,8 +67,8 @@ CREATE SEQUENCE public.categories_id_seq
 
 
 --
--- TOC entry 2864 (class 0 OID 0)
--- Dependencies: 206
+-- TOC entry 2871 (class 0 OID 0)
+-- Dependencies: 203
 -- Name: categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -78,7 +76,7 @@ ALTER SEQUENCE public.categories_id_seq OWNED BY public.categories.id;
 
 
 --
--- TOC entry 210 (class 1259 OID 16595)
+-- TOC entry 210 (class 1259 OID 16804)
 -- Name: comments; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -92,7 +90,7 @@ CREATE TABLE public.comments (
 
 
 --
--- TOC entry 209 (class 1259 OID 16593)
+-- TOC entry 209 (class 1259 OID 16802)
 -- Name: comments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -105,7 +103,7 @@ CREATE SEQUENCE public.comments_id_seq
 
 
 --
--- TOC entry 2865 (class 0 OID 0)
+-- TOC entry 2872 (class 0 OID 0)
 -- Dependencies: 209
 -- Name: comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -114,7 +112,7 @@ ALTER SEQUENCE public.comments_id_seq OWNED BY public.comments.id;
 
 
 --
--- TOC entry 205 (class 1259 OID 16556)
+-- TOC entry 204 (class 1259 OID 16742)
 -- Name: offers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -131,7 +129,7 @@ CREATE TABLE public.offers (
 
 
 --
--- TOC entry 208 (class 1259 OID 16578)
+-- TOC entry 205 (class 1259 OID 16748)
 -- Name: offers_categories; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -142,7 +140,7 @@ CREATE TABLE public.offers_categories (
 
 
 --
--- TOC entry 204 (class 1259 OID 16554)
+-- TOC entry 206 (class 1259 OID 16751)
 -- Name: offers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -155,8 +153,8 @@ CREATE SEQUENCE public.offers_id_seq
 
 
 --
--- TOC entry 2866 (class 0 OID 0)
--- Dependencies: 204
+-- TOC entry 2873 (class 0 OID 0)
+-- Dependencies: 206
 -- Name: offers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -164,7 +162,7 @@ ALTER SEQUENCE public.offers_id_seq OWNED BY public.offers.id;
 
 
 --
--- TOC entry 203 (class 1259 OID 16546)
+-- TOC entry 207 (class 1259 OID 16753)
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -178,7 +176,7 @@ CREATE TABLE public.users (
 
 
 --
--- TOC entry 202 (class 1259 OID 16544)
+-- TOC entry 208 (class 1259 OID 16756)
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -191,8 +189,8 @@ CREATE SEQUENCE public.users_id_seq
 
 
 --
--- TOC entry 2867 (class 0 OID 0)
--- Dependencies: 202
+-- TOC entry 2874 (class 0 OID 0)
+-- Dependencies: 208
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -200,7 +198,7 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- TOC entry 2713 (class 2604 OID 16575)
+-- TOC entry 2711 (class 2604 OID 16758)
 -- Name: categories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -208,7 +206,7 @@ ALTER TABLE ONLY public.categories ALTER COLUMN id SET DEFAULT nextval('public.c
 
 
 --
--- TOC entry 2714 (class 2604 OID 16598)
+-- TOC entry 2714 (class 2604 OID 16807)
 -- Name: comments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -216,7 +214,7 @@ ALTER TABLE ONLY public.comments ALTER COLUMN id SET DEFAULT nextval('public.com
 
 
 --
--- TOC entry 2712 (class 2604 OID 16559)
+-- TOC entry 2712 (class 2604 OID 16760)
 -- Name: offers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -224,7 +222,7 @@ ALTER TABLE ONLY public.offers ALTER COLUMN id SET DEFAULT nextval('public.offer
 
 
 --
--- TOC entry 2711 (class 2604 OID 16549)
+-- TOC entry 2713 (class 2604 OID 16761)
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -232,7 +230,7 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
--- TOC entry 2722 (class 2606 OID 16577)
+-- TOC entry 2716 (class 2606 OID 16763)
 -- Name: categories categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -241,7 +239,16 @@ ALTER TABLE ONLY public.categories
 
 
 --
--- TOC entry 2726 (class 2606 OID 16603)
+-- TOC entry 2718 (class 2606 OID 16801)
+-- Name: categories category_title; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.categories
+    ADD CONSTRAINT category_title UNIQUE (title);
+
+
+--
+-- TOC entry 2732 (class 2606 OID 16812)
 -- Name: comments comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -250,7 +257,7 @@ ALTER TABLE ONLY public.comments
 
 
 --
--- TOC entry 2724 (class 2606 OID 16582)
+-- TOC entry 2725 (class 2606 OID 16767)
 -- Name: offers_categories offers_categories_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -259,7 +266,7 @@ ALTER TABLE ONLY public.offers_categories
 
 
 --
--- TOC entry 2720 (class 2606 OID 16564)
+-- TOC entry 2720 (class 2606 OID 16769)
 -- Name: offers offers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -268,7 +275,7 @@ ALTER TABLE ONLY public.offers
 
 
 --
--- TOC entry 2716 (class 2606 OID 16553)
+-- TOC entry 2727 (class 2606 OID 16771)
 -- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -277,7 +284,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 2718 (class 2606 OID 16551)
+-- TOC entry 2729 (class 2606 OID 16773)
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -286,7 +293,47 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 2730 (class 2606 OID 16604)
+-- TOC entry 2730 (class 1259 OID 16823)
+-- Name: comments_offer_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX comments_offer_id_idx ON public.comments USING btree (offer_id);
+
+
+--
+-- TOC entry 2733 (class 1259 OID 16824)
+-- Name: comments_user_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX comments_user_id_idx ON public.comments USING btree (user_id);
+
+
+--
+-- TOC entry 2722 (class 1259 OID 16827)
+-- Name: offers_categories_category_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX offers_categories_category_id_idx ON public.offers_categories USING btree (category_id);
+
+
+--
+-- TOC entry 2723 (class 1259 OID 16826)
+-- Name: offers_categories_offer_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX offers_categories_offer_id_idx ON public.offers_categories USING btree (offer_id);
+
+
+--
+-- TOC entry 2721 (class 1259 OID 16825)
+-- Name: offers_user_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX offers_user_id_idx ON public.offers USING btree (user_id);
+
+
+--
+-- TOC entry 2737 (class 2606 OID 16813)
 -- Name: comments comments_offers; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -295,16 +342,16 @@ ALTER TABLE ONLY public.comments
 
 
 --
--- TOC entry 2731 (class 2606 OID 16609)
--- Name: comments commnets_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- TOC entry 2738 (class 2606 OID 16818)
+-- Name: comments comments_users; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.comments
-    ADD CONSTRAINT commnets_users FOREIGN KEY (user_id) REFERENCES public.users(id) MATCH FULL;
+    ADD CONSTRAINT comments_users FOREIGN KEY (user_id) REFERENCES public.users(id) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- TOC entry 2729 (class 2606 OID 16588)
+-- TOC entry 2735 (class 2606 OID 16784)
 -- Name: offers_categories offers_categories_categories; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -313,7 +360,7 @@ ALTER TABLE ONLY public.offers_categories
 
 
 --
--- TOC entry 2728 (class 2606 OID 16583)
+-- TOC entry 2736 (class 2606 OID 16789)
 -- Name: offers_categories offers_categories_offers; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -322,7 +369,7 @@ ALTER TABLE ONLY public.offers_categories
 
 
 --
--- TOC entry 2727 (class 2606 OID 16565)
+-- TOC entry 2734 (class 2606 OID 16794)
 -- Name: offers offers_users; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -330,7 +377,7 @@ ALTER TABLE ONLY public.offers
     ADD CONSTRAINT offers_users FOREIGN KEY (user_id) REFERENCES public.users(id) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
 
 
--- Completed on 2020-06-10 20:16:31
+-- Completed on 2020-06-12 10:48:43
 
 --
 -- PostgreSQL database dump complete
