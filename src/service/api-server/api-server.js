@@ -3,6 +3,7 @@
 const express = require(`express`);
 const {getLogger} = require(`../logger`);
 const expressPinoLogger = require(`express-pino-logger`);
+const {connectDB} = require(`../db-connect`);
 const {API_PREFIX} = require(`../service-constants`);
 const {HttpCode} = require(`../../constants`);
 const {getMockData} = require(`../lib/get-mock-data`);
@@ -24,6 +25,7 @@ const getServer = async () => {
   const server = express();
   const logger = getLogger();
   const mockData = await getMockData();
+  await connectDB();
 
   server.disable(`x-powered-by`);
   server.use(expressPinoLogger({logger}));
