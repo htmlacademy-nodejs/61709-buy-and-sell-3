@@ -7,7 +7,7 @@ const searchRouter = new Router();
 
 const getSearchRouter = (searchService) => {
 
-  searchRouter.get(`/`, (req, res) => {
+  searchRouter.get(`/`, async (req, res) => {
     const {query} = req.query;
 
     if (typeof (query) === `undefined`) {
@@ -19,7 +19,7 @@ const getSearchRouter = (searchService) => {
       });
     }
 
-    const searchResults = searchService.findAll(query);
+    const searchResults = await searchService.findAll(query);
 
     return res.status(HttpCode.SUCCESS).json(searchResults);
   });

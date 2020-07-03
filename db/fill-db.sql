@@ -42,7 +42,7 @@ INSERT INTO categories VALUES
 
 /* OFFERS_CATEGORIES TABLE (insert offers and categories relations into table) */
 
-INSERT INTO offers_categories VALUES
+INSERT INTO offersCategories VALUES
 (1, 2),
 (2, 4),
 (3, 6),

@@ -7,8 +7,13 @@ const categoryRouter = new Router();
 
 const getCategoryRouter = (categoryService) => {
 
-  categoryRouter.get(`/`, (req, res) => {
-    const categories = categoryService.findAll();
+  categoryRouter.get(`/`, async (req, res) => {
+    const categories = await categoryService.findAll();
+    return res.status(HttpCode.SUCCESS).json(categories);
+  });
+
+  categoryRouter.get(`/offers`, async (req, res) => {
+    const categories = await categoryService.findAllWithOffers();
     return res.status(HttpCode.SUCCESS).json(categories);
   });
 

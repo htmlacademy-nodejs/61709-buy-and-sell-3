@@ -1,5 +1,6 @@
 'use strict';
 const fs = require(`fs`).promises;
+const moment = require(`moment`);
 
 const getRandomInt = (min, max) => {
   min = Math.ceil(min);
@@ -52,6 +53,8 @@ const getMostDiscussedOffers = (offers) => {
                 .slice(0, 8);
 };
 
+const getTodayDate = () => moment.utc().format();
+
 module.exports = {
   getRandomInt,
   shuffle,
@@ -59,5 +62,6 @@ module.exports = {
   readContentJSON,
   printNumWithLead0,
   makePriceWithSpaces,
-  getMostDiscussedOffers
+  getMostDiscussedOffers,
+  getTodayDate
 };

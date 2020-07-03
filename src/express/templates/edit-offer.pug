@@ -5,11 +5,18 @@ block content
     section.ticket-form
       .ticket-form__wrapper
         h1.ticket-form__title Редактировать публикацию
+        if errors
+          .ticket-form__errors
+            h2.ticket-form__errors-title Ошибка отправки формы
+            ul.ticket-form__errors-list
+              each error in errors
+                li=error.msg
         .ticket-form__tile
-          form.ticket-form__form.form(action="#" method="post" enctype="multipart/form-data" autocomplete="off")
-            .ticket-form__avatar-container.js-preview-container.uploaded
+          form.ticket-form__form.form(action=`/offers/edit/${offer.id}` method="post" enctype="multipart/form-data" autocomplete="off")
+            div(class=`ticket-form__avatar-container js-preview-container ${offer && offer.picture ? `uploaded` : ``}`)
               .ticket-form__avatar.js-preview
-                img(src=`/img/${offer.picture.image}` srcset=`/img/${offer.picture.image2x} 2x` alt="")
+                if offer && offer.picture
+                  img(src=`/img/${offer.picture}` srcset=`/img/${offer.picture} 2x` alt="Изображение товара")
               .ticket-form__field-avatar
                 input#avatar.visually-hidden.js-file-field(type="file" name="picture")
                 label(for="avatar")
@@ -27,12 +34,15 @@ block content
                   label(for="comment-field") Описание
                   span Обязательное поле
               .ticket-form__row
-                select#category-field.form__select.js-multiple-select(name="category[]" data-label="Выбрать категорию публикации" multiple)
-                  each category, index in categories
-                    option(value=category selected=(offer.category.includes(category)))= category
+                select#category-field.form__select.js-multiple-select(name="categories[]" data-label="Выбрать категорию публикации" multiple)
+                  each category in categories
+                    option(
+                      value=category.id
+                      selected=(offer.categories.some(({id}) => id === category.id))
+                    )= category.title
               .ticket-form__row
                 .form__field.form__field--price
-                  input#price-field.js-field.js-price(type="number" name="price" min="1" value=`${offer.sum.split(` `).join(``)}` required="")
+                  input#price-field.js-field.js-price(type="number" name="sum" min="1" value=`${offer.sum}` required="")
                   label(for="price-field") Цена
                   span Обязательное поле
                 .form__switch.switch
