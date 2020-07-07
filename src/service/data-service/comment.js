@@ -5,7 +5,6 @@ const {Comment} = sequelize.models;
 class CommentService {
 
   async create(commentData) {
-    console.log(commentData);
     return await Comment.create(commentData, {returning: true});
   }
 

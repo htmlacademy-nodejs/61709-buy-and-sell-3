@@ -26,7 +26,7 @@ class ApiService {
   }
 
   async getLastOfferComments(userId) {
-    return await this._api.get(`/offers/user/${userId}/comments`);
+    return await this._api.get(`/offers/${userId}/comments`);
   }
 
   async createNewOffer(offerData) {

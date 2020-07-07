@@ -38,7 +38,7 @@ const getOffersRouter = (offerService, commentService, categoryService) => {
     return res.status(HttpCode.SUCCESS).json(userOffers);
   });
 
-  offersRouter.get(`/user/:userId/comments`, async (req, res) => {
+  offersRouter.get(`/:userId/comments`, async (req, res) => {
     const {userId} = req.params;
     const offers = await offerService.findLastOfferComments(userId);
 
