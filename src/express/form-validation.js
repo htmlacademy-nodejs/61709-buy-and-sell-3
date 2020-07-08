@@ -11,7 +11,7 @@ const newOfferFormFieldsRules = [
     .bail()
     .isLength({min: 50})
     .withMessage(`Описание предложения должно содержать минимум 50 символов`),
-  check(`category`, `Выберите минимум одну категорию для предложения`).exists().bail().isArray({min: 1}),
+  check(`categories`, `Выберите минимум одну категорию для предложения`).exists().bail().isArray({min: 1}),
   check(`sum`)
     .trim()
     .notEmpty()
@@ -22,4 +22,16 @@ const newOfferFormFieldsRules = [
   check(`type`, `Выберите тип предложения (покупка/продажа)`).notEmpty()
 ];
 
-module.exports = {newOfferFormFieldsRules};
+const newCommentFormFieldsRules = [
+  check(`text`, `Введите комментарий`)
+    .trim()
+    .notEmpty()
+    .bail()
+    .isLength({min: 20})
+    .withMessage(`Комментарий должен содержать минимум 20 символов`)
+];
+
+module.exports = {
+  newOfferFormFieldsRules,
+  newCommentFormFieldsRules
+};

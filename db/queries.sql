@@ -21,7 +21,7 @@ SELECT
 	categories.title AS "Наименование категории",
 	count(offers_categories.category_id) AS "Количество объявлений в категории"
 FROM offers_categories
-INNER JOIN categories
+LEFT JOIN categories
 	ON offers_categories.category_id = categories.id
 GROUP BY
 	categories.id,

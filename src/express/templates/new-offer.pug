@@ -16,7 +16,7 @@ block content
             div(class=`ticket-form__avatar-container js-preview-container ${formFieldsData && formFieldsData.picture ? `uploaded` : ``}`)
               .ticket-form__avatar.js-preview
                 if formFieldsData && formFieldsData.picture
-                  img(src=`/img/${formFieldsData.picture}` alt="")
+                  img(src=`/img/${formFieldsData.picture}` alt="Изображение товара")
               .ticket-form__field-avatar
                 input#avatar.visually-hidden.js-file-field(type="file" name="picture")
                 label(for="avatar")
@@ -34,9 +34,15 @@ block content
                   label(for="comment-field") Описание
                   span Обязательное поле
               .ticket-form__row
-                select#category-field.form__select.js-multiple-select(name="category[]" data-label="Выбрать категорию публикации" multiple)
+                select#category-field.form__select.js-multiple-select(name="categories[]" data-label="Выбрать категорию публикации" multiple)
                   each category in categories
-                      option(value=category selected=(formFieldsData && formFieldsData.category ? formFieldsData.category.includes(category) : false))= category
+                    option(
+                      value=category.id
+                      selected=(
+                        formFieldsData && formFieldsData.categories ?
+                          formFieldsData.categories.includes(String(category.id)) : false
+                        )
+                      )= category.title
               .ticket-form__row
                 .form__field.form__field--price
                   input#price-field.js-field.js-price(type="number" name="sum" min="1" value=(formFieldsData && formFieldsData.sum ? formFieldsData.sum : ``) required="")

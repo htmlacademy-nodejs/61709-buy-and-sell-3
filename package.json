@@ -8,10 +8,11 @@
     "test::rest": "jest",
     "eslint": "eslint --ext .js src/",
     "start": "node ./src/service/service.js",
-    "server": "cross-env LOG_LEVEL=error nodemon ./src/service/service.js --server 3000 | pino-pretty > ./src/service/logs/app.log",
+    "server": "cross-env LOG_LEVEL=error nodemon ./src/service/service.js --server 3000",
     "server::debug": "cross-env LOG_LEVEL=debug nodemon ./src/service/service.js --server 3000 | pino-pretty > ./src/service/logs/app.log",
     "start-front-server": "nodemon ./src/express/index.js",
-    "start-app": "concurrently \"npm run start-front-server\" \"npm run server\""
+    "start-app": "concurrently \"npm run start-front-server\" \"npm run server\"",
+    "initdb": "node ./src/service/db-config/init-db.js"
   },
   "repository": {
     "type": "git",
@@ -36,9 +37,11 @@
     "axios": "0.19.2",
     "chalk": "4.0.0",
     "cross-env": "7.0.2",
+    "dotenv": "8.2.0",
     "express": "4.17.1",
     "express-pino-logger": "5.0.0",
     "express-validator": "6.5.0",
+    "moment": "2.27.0",
     "multer": "1.4.2",
     "nanoid": "3.1.5",
     "pg": "8.2.1",

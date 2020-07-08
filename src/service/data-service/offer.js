@@ -1,49 +1,130 @@
 'use strict';
 
-const {nanoid} = require(`nanoid`);
-const {MAX_ID_LENGTH} = require(`../service-constants`);
+const {sequelize} = require(`../db-config/db`);
+const {Offer, Comment, Category, offersCategories, User} = sequelize.models;
+const NEW_OFFERS_LIMIT = 8;
+const POPULAR_OFFERS_LIMIT = 8;
 
 class OfferService {
-  constructor(offers) {
-    this._offers = offers;
-  }
 
-  create(offer) {
-    const newOffer = Object.assign(
-        {
-          id: nanoid(MAX_ID_LENGTH),
-          comments: []
-        },
-        offer
-    );
-
-    this._offers.push(newOffer);
+  async createOffer(offerData) {
+    const newOffer = await Offer.create(offerData, {returning: true});
+    await newOffer.addCategories(offerData.categories);
     return newOffer;
   }
 
-  drop(id) {
-    const offer = this._offers.find((item) => item.id === id);
+  async deleteOffer(offerId) {
+    return await Offer.destroy({where: {id: offerId}});
+  }
 
-    if (!offer) {
-      return null;
-    }
+  async findAll() {
+    const offers = await Offer.findAll({
+      include: [`categories`],
+      order: [[`date`, `DESC`]],
+      limit: NEW_OFFERS_LIMIT
+    });
 
-    this._offers = this._offers.filter((item) => item.id !== id);
+    return offers;
+  }
+
+  async findOffersByCategoryId(categoryId) {
+    const category = await Category.findByPk(categoryId);
+    const offers = await category.getOffers({include: [`categories`]});
+
+    return {category, offers};
+  }
+
+  async findByUserId(userId) {
+    const offers = await Offer.findAll({
+      include: [`categories`],
+      where: {userId},
+      order: [[`date`, `DESC`]]
+    });
+
+    return offers;
+  }
+
+  async findLastOfferComments(userId) {
+    const offers = await Offer.findAll({
+      include: [
+        {
+          model: Comment,
+          as: `comments`,
+          include: [`users`],
+          required: true
+        },
+        `categories`
+      ],
+      where: {userId},
+      order: sequelize.literal(`"comments"."date" DESC`)
+    });
+
+    return offers;
+  }
+
+  async findMostDiscussedOffers() {
+
+    const offers = await Offer.findAll({
+      attributes: {
+        include: [[sequelize.fn(`count`, sequelize.col(`comments.offerId`)), `commentsCount`]]
+      },
+      include: [
+        {
+          model: Comment,
+          as: `comments`,
+          attributes: [],
+          required: true,
+          duplicating: false
+        },
+        {
+          model: Category,
+          as: `categories`,
+          duplicating: false
+        }
+      ],
+      group: [`Offer.id`, `categories.id`, `categories->offersCategories.offerId`, `categories->offersCategories.categoryId`],
+      order: sequelize.literal(`"commentsCount" DESC`),
+      limit: POPULAR_OFFERS_LIMIT
+    });
+
+    return offers;
+  }
+
+  async findOne(offerId) {
+    const offer = await Offer.findByPk(offerId, {
+      include: [
+        `categories`,
+        `users`,
+        {
+          model: Comment,
+          as: `comments`,
+          include: [{
+            model: User,
+            as: `users`,
+            nested: true,
+            attributes: [`firstname`, `lastname`, `avatar`]
+          }]
+        }
+      ]
+    });
+
     return offer;
   }
 
-  findAll() {
-    return this._offers;
-  }
+  async updateOffer(offerId, offerData) {
+    const [updateResult, [updatedOffer]] = await Offer.update(offerData, {
+      where: {id: offerId},
+      returning: true
+    });
 
-  findOne(id) {
-    return this._offers.find((item) => item.id === id);
-  }
+    if (!updateResult) {
+      throw Error(`Offer is not updated: ${offerId}`);
+    }
 
-  update(id, offer) {
-    const oldOffer = this._offers.find((item) => item.id === id);
+    await offersCategories.destroy({where: {offerId}});
+    await updatedOffer.addCategories(offerData.categories);
 
-    return Object.assign(oldOffer, offer);
+    return updatedOffer;
   }
 
 }

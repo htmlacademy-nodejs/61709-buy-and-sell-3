@@ -1,7 +1,6 @@
 'use strict';
 
 const {Cli} = require(`./cli`);
-
 const {ExitCode} = require(`../constants`);
 const {
   DEFAULT_COMMAND,

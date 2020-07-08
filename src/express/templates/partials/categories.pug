@@ -5,8 +5,8 @@ mixin categories(categoryList)
         ul.categories-list__wrapper
           each category, index in categoryList
             li.categories-list__item
-              a.category-tile.category-tile--default(href="#")
+              a.category-tile.category-tile--default(href=(`/offers/category/${category.id}`))
                 span.category-tile__image
                   img(src=`/img/cat${index > 0 ? `0${index + 1}` : ``}.jpg` srcset=`/img/cat${index > 0 ? `0${index + 1}` : ``}@2x.jpg 2x` alt="Иконка категории")
-                span.category-tile__label= `${category} `
-                  span.category-tile__qty.js-qty= `${Math.floor(Math.random() * 100)}`
+                span.category-tile__label= `${category.title} `
+                  span.category-tile__qty.js-qty= `${category.offersCount}`
