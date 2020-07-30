@@ -22,8 +22,11 @@ const HttpCode = {
   INTERNAL_SERVER_ERROR: 500
 };
 
+const OFFERS_BY_CATEGORY_LIMIT = 8;
+
 module.exports = {
   PUBLIC_DIR,
+  OFFERS_BY_CATEGORY_LIMIT,
   ExitCode,
   DefaultPort,
   HttpCode

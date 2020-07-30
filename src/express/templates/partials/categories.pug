@@ -1,11 +1,14 @@
-mixin categories(categoryList)
+mixin categories(categoryList, activeCategory)
 
   section.categories-list
         h1.visually-hidden Сервис объявлений "Куплю - продам"
         ul.categories-list__wrapper
           each category, index in categoryList
             li.categories-list__item
-              a.category-tile.category-tile--default(href=(`/offers/category/${category.id}`))
+              a(
+                class=`category-tile ${!activeCategory ? `category-tile--default` : category.id === activeCategory.id ? `category-tile--active` : ``}`
+                href=`/offers/category/${category.id}`
+              )
                 span.category-tile__image
                   img(src=`/img/cat${index > 0 ? `0${index + 1}` : ``}.jpg` srcset=`/img/cat${index > 0 ? `0${index + 1}` : ``}@2x.jpg 2x` alt="Иконка категории")
                 span.category-tile__label= `${category.title} `

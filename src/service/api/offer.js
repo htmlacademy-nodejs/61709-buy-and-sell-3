@@ -1,7 +1,10 @@
 'use strict';
 
 const {Router} = require(`express`);
-const {HttpCode} = require(`../../constants`);
+const {
+  HttpCode,
+  OFFERS_BY_CATEGORY_LIMIT
+} = require(`../../constants`);
 const offerValidator = require(`../middlewares/offer-validator`);
 const commentValidator = require(`../middlewares/comment-validator`);
 
@@ -47,6 +50,7 @@ const getOffersRouter = (offerService, commentService, categoryService) => {
 
   offersRouter.get(`/category/:categoryId`, async (req, res) => {
     const {categoryId} = req.params;
+    const {activePage} = req.query;
     const isCategoryExist = await categoryService.getCategoryById(categoryId);
 
     if (!isCategoryExist) {
@@ -58,9 +62,28 @@ const getOffersRouter = (offerService, commentService, categoryService) => {
         });
     }
 
-    const {category, offers} = await offerService.findOffersByCategoryId(categoryId);
+    const {
+      category,
+      offers,
+      offersCount
+    } = await offerService.findOffersByCategoryId(categoryId, Number(activePage));
+    const pagesCount = Math.ceil(offersCount / OFFERS_BY_CATEGORY_LIMIT);
 
-    return res.status(HttpCode.SUCCESS).json({category, offers});
+    if (activePage > pagesCount) {
+      return res.status(HttpCode.NOT_FOUND)
+        .json({
+          error: true,
+          status: HttpCode.NOT_FOUND,
+          message: `Page ${activePage} not found`
+        });
+    }
+
+    return res.status(HttpCode.SUCCESS).json({
+      category,
+      offers,
+      offersCount,
+      pagesCount
+    });
   });
 
   offersRouter.delete(`/:offerId`, async (req, res) => {
