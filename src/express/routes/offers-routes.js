@@ -21,7 +21,7 @@ const getOffersRouter = (service) => {
 
   offersRouter.get(`/category/:id`, async (req, res, next) => {
     try {
-      const activePage = Number(req.query.page) || 1;
+      const activePage = parseInt(req.query.page, 10) || 1;
       const categoryId = req.params.id;
       const categories = await service.getAllCategoriesWithOffers();
       const {
