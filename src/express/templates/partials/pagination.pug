@@ -1,0 +1,17 @@
+mixin pagination(category, pagesCount, activePage)
+
+  .tickets-list__pagination
+    ul.pagination
+      if activePage !== 1
+        li
+          a(href=`/offers/category/${category.id}?page=${activePage - 1}`) Назад
+      - for (var n = 1; n <= pagesCount; n++) {
+          li
+            if n === activePage
+              span.active= n
+            else
+              a(href=`/offers/category/${category.id}?page=${n}`)= n
+      - }
+      if pagesCount !== activePage
+        li
+          a(href=`/offers/category/${category.id}?page=${activePage + 1}`) Дальше

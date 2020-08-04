@@ -2,6 +2,7 @@
 
 const {sequelize} = require(`../db-config/db`);
 const {Offer, Comment, Category, offersCategories, User} = sequelize.models;
+const {OFFERS_BY_CATEGORY_LIMIT} = require(`../../constants`);
 const NEW_OFFERS_LIMIT = 8;
 const POPULAR_OFFERS_LIMIT = 8;
 
@@ -27,11 +28,18 @@ class OfferService {
     return offers;
   }
 
-  async findOffersByCategoryId(categoryId) {
+  async findOffersByCategoryId(categoryId, activePage) {
+    const offset = OFFERS_BY_CATEGORY_LIMIT * (activePage - 1);
+    console.log(OFFERS_BY_CATEGORY_LIMIT);
     const category = await Category.findByPk(categoryId);
-    const offers = await category.getOffers({include: [`categories`]});
+    const offersCount = await category.countOffers();
+    const offers = await category.getOffers({
+      include: [`categories`],
+      limit: OFFERS_BY_CATEGORY_LIMIT,
+      offset
+    });
 
-    return {category, offers};
+    return {category, offers, offersCount};
   }
 
   async findByUserId(userId) {

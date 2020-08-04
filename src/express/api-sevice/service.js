@@ -14,8 +14,8 @@ class ApiService {
     return await this._api.get(`/offers/${offerId}`);
   }
 
-  async getOffersByCategoryId(categoryId) {
-    return await this._api.get(`/offers/category/${categoryId}`);
+  async getOffersByCategoryId(categoryId, activePage) {
+    return await this._api.get(`/offers/category/${categoryId}`, {params: {activePage}});
   }
   async getOffersByUserId(userId) {
     return await this._api.get(`/offers/user/${userId}`);

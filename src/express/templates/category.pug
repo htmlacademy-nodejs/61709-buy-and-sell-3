@@ -1,15 +1,18 @@
 extends layout.pug
+include partials/categories.pug
 include partials/offers-list.pug
+include partials/pagination.pug
 
 block content
 
   main.page-content
-    include partials/categories.pug
+    +categories(categories, category)
     section.tickets-list
       h2.visually-hidden Предложения из категории электроника
       .tickets-list__wrapper
         .tickets-list__header
           p.tickets-list__title= category.title
-            b.js-qty= ` ${offers.length}`
+            b.js-qty= ` ${offersCount}`
         +offers-list(offers)
-        include partials/tickets-list-pagination.pug
+        if pagesCount > 1
+          +pagination(category, pagesCount, activePage)

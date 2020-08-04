@@ -21,10 +21,24 @@ const getOffersRouter = (service) => {
 
   offersRouter.get(`/category/:id`, async (req, res, next) => {
     try {
+      const activePage = parseInt(req.query.page, 10) || 1;
       const categoryId = req.params.id;
-      const {offers, category} = await service.getOffersByCategoryId(categoryId);
+      const categories = await service.getAllCategoriesWithOffers();
+      const {
+        offers,
+        category,
+        offersCount,
+        pagesCount
+      } = await service.getOffersByCategoryId(categoryId, activePage);
 
-      return res.render(`category`, {offers, category});
+      return res.render(`category`, {
+        offers,
+        categories,
+        category,
+        offersCount,
+        activePage,
+        pagesCount
+      });
     } catch (err) {
       return next(err);
     }
