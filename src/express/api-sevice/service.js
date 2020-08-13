@@ -1,4 +1,5 @@
 'use strict';
+const {HttpCode} = require(`../../constants`);
 
 class ApiService {
 
@@ -30,11 +31,45 @@ class ApiService {
   }
 
   async createNewOffer(offerData) {
-    return await this._api.post(`/offers`, offerData);
+    try {
+      return await this._api.post(`/offers`, offerData);
+    } catch (err) {
+      const {response} = err;
+
+      if (response.status === HttpCode.BAD_REQUEST) {
+        const {data: {errors, categories, offerFormData}} = response;
+        return {
+          validationError: true,
+          errors,
+          categories,
+          offerFormData
+        };
+      }
+
+      throw err;
+    }
+
   }
 
   async updateOffer(offerId, offerData) {
-    return await this._api.put(`/offers/${offerId}`, offerData);
+    try {
+      return await this._api.put(`/offers/${offerId}`, offerData);
+    } catch (err) {
+      const {response} = err;
+
+      if (response.status === HttpCode.BAD_REQUEST) {
+        const {data: {errors, categories, offerFormData, offer}} = response;
+        return {
+          validationError: true,
+          errors,
+          categories,
+          offerFormData,
+          offer
+        };
+      }
+
+      throw err;
+    }
   }
 
   async getAllCategories() {
@@ -49,8 +84,23 @@ class ApiService {
     return await this._api.get(`/search?query=${encodeURI(query)}`);
   }
 
-  async createComment(commentData) {
-    return await this._api.post(`/offers/comments`, commentData);
+  async createComment(commentData, offerId) {
+    try {
+      return await this._api.post(`/offers/${offerId}/comments`, {...commentData});
+    } catch (err) {
+      const {response} = err;
+
+      if (response.status === HttpCode.BAD_REQUEST) {
+        const {data: {errors, offer}} = response;
+        return {
+          validationError: true,
+          errors,
+          offer
+        };
+      }
+
+      throw err;
+    }
   }
 
   async deleteComment(commentId) {
