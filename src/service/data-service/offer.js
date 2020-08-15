@@ -30,7 +30,6 @@ class OfferService {
 
   async findOffersByCategoryId(categoryId, activePage) {
     const offset = OFFERS_BY_CATEGORY_LIMIT * (activePage - 1);
-    console.log(OFFERS_BY_CATEGORY_LIMIT);
     const category = await Category.findByPk(categoryId);
     const offersCount = await category.countOffers();
     const offers = await category.getOffers({

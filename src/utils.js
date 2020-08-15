@@ -1,6 +1,7 @@
 'use strict';
 const fs = require(`fs`).promises;
 const moment = require(`moment`);
+const {validationResult} = require(`express-validator`);
 
 const getRandomInt = (min, max) => {
   min = Math.ceil(min);
@@ -55,6 +56,9 @@ const getMostDiscussedOffers = (offers) => {
 
 const getTodayDate = () => moment.utc().format();
 
+const errorFormatter = ({msg}) => ({msg});
+const validate = (req) => validationResult(req).formatWith(errorFormatter).array();
+
 module.exports = {
   getRandomInt,
   shuffle,
@@ -63,5 +67,6 @@ module.exports = {
   printNumWithLead0,
   makePriceWithSpaces,
   getMostDiscussedOffers,
-  getTodayDate
+  getTodayDate,
+  validate
 };

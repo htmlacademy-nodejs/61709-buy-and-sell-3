@@ -13,10 +13,10 @@ block content
                 li=error.msg
         .ticket-form__tile
           form.ticket-form__form.form(action="/offers/add" method="post" enctype="multipart/form-data" autocomplete="off")
-            div(class=`ticket-form__avatar-container js-preview-container ${formFieldsData && formFieldsData.picture ? `uploaded` : ``}`)
+            div(class=`ticket-form__avatar-container js-preview-container ${offerFormData && offerFormData.picture ? `uploaded` : ``}`)
               .ticket-form__avatar.js-preview
-                if formFieldsData && formFieldsData.picture
-                  img(src=`/img/${formFieldsData.picture}` alt="Изображение товара")
+                if offerFormData && offerFormData.picture
+                  img(src=`/img/${offerFormData.picture}` alt="Изображение товара")
               .ticket-form__field-avatar
                 input#avatar.visually-hidden.js-file-field(type="file" name="picture")
                 label(for="avatar")
@@ -25,12 +25,12 @@ block content
             .ticket-form__content
               .ticket-form__row
                 .form__field
-                  input#ticket-name.js-field(type="text" name="title" value=(formFieldsData && formFieldsData.title ? formFieldsData.title : ``) required="")
+                  input#ticket-name.js-field(type="text" name="title" value=(offerFormData && offerFormData.title ? offerFormData.title : ``) required="")
                   label(for="ticket-name") Название
                   span Обязательное поле
               .ticket-form__row
                 .form__field
-                  textarea#comment-field.js-field(name="description" cols="30" rows="10" maxlength="400" minlength="50")= formFieldsData && formFieldsData.description ? formFieldsData.description : ``
+                  textarea#comment-field.js-field(name="description" cols="30" rows="10" maxlength="400" minlength="50")= offerFormData && offerFormData.description ? offerFormData.description : ``
                   label(for="comment-field") Описание
                   span Обязательное поле
               .ticket-form__row
@@ -39,20 +39,20 @@ block content
                     option(
                       value=category.id
                       selected=(
-                        formFieldsData && formFieldsData.categories ?
-                          formFieldsData.categories.includes(String(category.id)) : false
+                        offerFormData && offerFormData.categories ?
+                          offerFormData.categories.includes(String(category.id)) : false
                         )
                       )= category.title
               .ticket-form__row
                 .form__field.form__field--price
-                  input#price-field.js-field.js-price(type="number" name="sum" min="1" value=(formFieldsData && formFieldsData.sum ? formFieldsData.sum : ``) required="")
+                  input#price-field.js-field.js-price(type="number" name="sum" min="1" value=(offerFormData && offerFormData.sum ? offerFormData.sum : ``) required="")
                   label(for="price-field") Цена
                   span Обязательное поле
                 .form__switch.switch
                   .switch__item
-                    input#buy-field.visually-hidden(type="radio" name="type" value="buy" checked=(formFieldsData && formFieldsData.type === `buy`))
+                    input#buy-field.visually-hidden(type="radio" name="type" value="buy" checked=(offerFormData && offerFormData.type === `buy`))
                     label.switch__button(for="buy-field") Куплю
                   .switch__item
-                    input#sell-field.visually-hidden(type="radio" name="type" value="sale" checked=(formFieldsData && formFieldsData.type === `sale`))
+                    input#sell-field.visually-hidden(type="radio" name="type" value="sale" checked=(offerFormData && offerFormData.type === `sale`))
                     label.switch__button(for="sell-field") Продам
             button.form__button.btn.btn--medium.js-button(type="submit" disabled="") Опубликовать

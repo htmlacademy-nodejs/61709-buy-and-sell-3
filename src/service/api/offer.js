@@ -2,11 +2,18 @@
 
 const {Router} = require(`express`);
 const {
+  newOfferFormFieldsRules,
+  newCommentFormFieldsRules
+} = require(`../form-validation`);
+const {checkParamIsInteger} = require(`../middlewares/param-validator`);
+const {
   HttpCode,
   OFFERS_BY_CATEGORY_LIMIT
 } = require(`../../constants`);
-const offerValidator = require(`../middlewares/offer-validator`);
-const commentValidator = require(`../middlewares/comment-validator`);
+const {
+  getTodayDate,
+  validate
+} = require(`../../utils`);
 
 const offersRouter = new Router();
 
@@ -94,19 +101,33 @@ const getOffersRouter = (offerService, commentService, categoryService) => {
     return res.status(HttpCode.CREATED).json(offer);
   });
 
-  offersRouter.post(`/`, offerValidator, async (req, res) => {
-    const offerData = req.body;
-    const offer = await offerService.createOffer(offerData);
+  offersRouter.post(`/`, ...newOfferFormFieldsRules, async (req, res) => {
+    const errors = validate(req);
+    let offerFormData = {...req.body};
+
+    if (Object.keys(errors).length) {
+      const categories = await categoryService.findAll();
+      return res.status(HttpCode.BAD_REQUEST).send({errors, categories, offerFormData});
+    }
+
+    offerFormData = {
+      ...offerFormData,
+      userId: 1,
+      date: getTodayDate()
+    };
+
+    const offer = await offerService.createOffer(offerFormData);
 
     return res.status(HttpCode.CREATED).json(offer);
   });
 
-  offersRouter.put(`/:offerId`, offerValidator, async (req, res) => {
+  offersRouter.put(`/:offerId`, checkParamIsInteger, ...newOfferFormFieldsRules, async (req, res) => {
     const {offerId} = req.params;
-    const offerData = req.body;
-    const isOfferExist = await offerService.findOne(offerId);
+    const errors = validate(req);
+    const offer = await offerService.findOne(offerId);
+    let offerFormData = {...req.body};
 
-    if (!isOfferExist) {
+    if (!offer) {
       return res.status(HttpCode.NOT_FOUND)
         .json({
           error: true,
@@ -115,7 +136,12 @@ const getOffersRouter = (offerService, commentService, categoryService) => {
         });
     }
 
-    const updatedOffer = await offerService.updateOffer(offerId, offerData);
+    if (Object.keys(errors).length) {
+      const categories = await categoryService.findAll();
+      return res.status(HttpCode.BAD_REQUEST).send({errors, categories, offerFormData, offer});
+    }
+
+    const updatedOffer = await offerService.updateOffer(offerId, offerFormData);
 
     return res.status(HttpCode.SUCCESS).json(updatedOffer);
   });
@@ -171,8 +197,36 @@ const getOffersRouter = (offerService, commentService, categoryService) => {
     return res.status(HttpCode.SUCCESS).json(deletedComment);
   });
 
-  offersRouter.post(`/comments`, commentValidator, async (req, res) => {
-    const commentData = req.body;
+  offersRouter.post(`/:offerId/comments`, checkParamIsInteger, ...newCommentFormFieldsRules, async (req, res) => {
+    const {offerId} = req.params;
+    const errors = validate();
+    let commentData = req.body;
+
+    const isOfferExists = await offerService.findOne(offerId);
+
+    if (!isOfferExists) {
+      return res.status(HttpCode.NOT_FOUND).json({
+        error: true,
+        status: HttpCode.NOT_FOUND,
+        message: `Offer with ${offerId} not found`
+      });
+    }
+
+    if (Object.keys(errors).length) {
+      const offer = await offerService.findOne(offerId);
+      return res.status(HttpCode.BAD_REQUEST).send({
+        errors,
+        offer
+      });
+    }
+
+    commentData = {
+      ...commentData,
+      offerId,
+      userId: 2,
+      date: getTodayDate()
+    };
+
     const comment = await commentService.create(commentData);
 
     return res.status(HttpCode.CREATED).json(comment);
