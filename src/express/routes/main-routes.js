@@ -47,10 +47,10 @@ const getMainRouter = (service) => {
         lastname
       };
 
-      const newUserData = await service.createNewUser(userFormData);
+      const userCreationResult = await service.createNewUser(userFormData);
 
-      if (newUserData.validationError) {
-        const {errors} = newUserData;
+      if (userCreationResult.validationError) {
+        const {errors} = userCreationResult;
         return res.render(`sign-up`, {errors, userFormData});
       }
 
