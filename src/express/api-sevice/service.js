@@ -103,6 +103,24 @@ class ApiService {
     }
   }
 
+  async createNewUser(userFormData) {
+    try {
+      return await this._api.post(`/users`, {...userFormData});
+    } catch (err) {
+      const {response} = err;
+
+      if (response.status === HttpCode.BAD_REQUEST) {
+        const {data: {errors}} = response;
+        return {
+          validationError: true,
+          errors
+        };
+      }
+
+      throw err;
+    }
+  }
+
   async deleteComment(commentId) {
     return await this._api.delete(`/offers/comments/${commentId}`);
   }

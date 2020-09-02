@@ -56,11 +56,11 @@ const getOffersRouter = (service) => {
         };
       }
 
-      const newOfferData = await service.createNewOffer(offerData);
+      const offerCreationResult = await service.createNewOffer(offerData);
 
-      if (newOfferData.validationError) {
-        const {errors, categories, offerFormData} = newOfferData;
-        return res.render(`new-offer`, {errors, categories, offerFormData});
+      if (offerCreationResult.validationError) {
+        const {errors, categories} = offerCreationResult;
+        return res.render(`new-offer`, {errors, categories, offerData});
       }
 
       return res.redirect(`/my`);
@@ -94,17 +94,17 @@ const getOffersRouter = (service) => {
         };
       }
 
-      const editedOfferData = await service.updateOffer(offerId, offerData);
+      const offerUpdateResult = await service.updateOffer(offerId, offerData);
 
-      if (editedOfferData.validationError) {
-        const {errors, categories, offerFormData} = editedOfferData;
+      if (offerUpdateResult.validationError) {
+        const {errors, categories} = offerUpdateResult;
 
         return res.render(`edit-offer`, {
           errors,
           categories,
-          offerFormData: {
-            ...offerFormData,
-            categories: offerFormData.categories ? offerFormData.categories : []
+          offerData: {
+            ...offerData,
+            categories: offerData.categories ? offerData.categories : []
           },
           offerId
         });
@@ -131,10 +131,10 @@ const getOffersRouter = (service) => {
       let commentData = {...req.body};
       const {offerId} = req.params;
 
-      const newComment = await service.createComment(commentData, offerId);
+      const commentCreationResult = await service.createComment(commentData, offerId);
 
-      if (newComment.validationError) {
-        const {errors, offer} = newComment;
+      if (commentCreationResult.validationError) {
+        const {errors, offer} = commentCreationResult;
         return res.render(`offer`, {errors, offer});
       }
 

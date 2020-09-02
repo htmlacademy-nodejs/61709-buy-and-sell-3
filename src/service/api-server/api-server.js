@@ -10,7 +10,8 @@ const {HttpCode} = require(`../../constants`);
 const {
   getCategoryRouter,
   getSearchRouter,
-  getOffersRouter
+  getOffersRouter,
+  getUserRouter
 } = require(`../api`);
 
 const {
@@ -18,6 +19,7 @@ const {
   SearchService,
   OfferService,
   CommentService,
+  UserService
 } = require(`../data-service`);
 
 const getServer = async () => {
@@ -49,6 +51,10 @@ const getServer = async () => {
           new CommentService(),
           new CategoryService()
       )
+  );
+  server.use(
+      `${API_PREFIX}/users`,
+      getUserRouter(new UserService())
   );
 
   server.use((req, res) => {

@@ -25,12 +25,12 @@ block content
             .ticket-form__content
               .ticket-form__row
                 .form__field
-                  input#ticket-name.js-field(type="text" name="title" value=`${offerFormData ? offerFormData.title : offer.title}` required="")
+                  input#ticket-name.js-field(type="text" name="title" value=`${offerData ? offerData.title : offer.title}` required="")
                   label(for="ticket-name") Название
                   span Обязательное поле
               .ticket-form__row
                 .form__field
-                  textarea#comment-field.js-field(name="description" cols="30" rows="10" maxlength="400" minlength="50")= offerFormData ? offerFormData.description : offer.description
+                  textarea#comment-field.js-field(name="description" cols="30" rows="10" maxlength="400" minlength="50")= offerData ? offerData.description : offer.description
                   label(for="comment-field") Описание
                   span Обязательное поле
               .ticket-form__row
@@ -39,22 +39,22 @@ block content
                     option(
                       value=category.id
                       selected=(
-                        offerFormData ?
-                          offerFormData.categories.includes(String(category.id))
+                        offerData ?
+                          offerData.categories.includes(String(category.id))
                           :
                           offer.categories.some(({id}) => id === category.id)
                         )
                     )= category.title
               .ticket-form__row
                 .form__field.form__field--price
-                  input#price-field.js-field.js-price(type="number" name="sum" min="1" value=`${offerFormData ? offerFormData.sum : offer.sum}` required="")
+                  input#price-field.js-field.js-price(type="number" name="sum" min="1" value=`${offerData ? offerData.sum : offer.sum}` required="")
                   label(for="price-field") Цена
                   span Обязательное поле
                 .form__switch.switch
                   .switch__item
-                    input#buy-field.visually-hidden(type="radio" name="type" value="buy" checked=(offerFormData ? offerFormData.type === "buy" : offer.type === "buy"))
+                    input#buy-field.visually-hidden(type="radio" name="type" value="buy" checked=(offerData ? offerData.type === "buy" : offer.type === "buy"))
                     label.switch__button(for="buy-field") Куплю
                   .switch__item
-                    input#sell-field.visually-hidden(type="radio" name="type" value="sale" checked=(offerFormData ? offerFormData.type === "sale" : offer.type === "sale"))
+                    input#sell-field.visually-hidden(type="radio" name="type" value="sale" checked=(offerData ? offerData.type === "sale" : offer.type === "sale"))
                     label.switch__button(for="sell-field") Продам
             button.form__button.btn.btn--medium.js-button(type="submit") Сохранить
