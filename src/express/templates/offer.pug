@@ -35,35 +35,45 @@ block content
                       img(src=`/img/cat${index > 0 ? `0${index + 1}` : ``}.jpg` srcset=`/img/cat${index > 0 ? `0${index + 1}` : ``}@2x.jpg 2x` alt="Иконка категории")
                     span.category-tile__label= category.title
         .ticket__comments
+          if !user
+            .ticket__warning
+              p Отправка комментариев доступна <br>только для зарегистрированных пользователей.</p>
+              a(href="/login" class="btn btn--big") Вход и регистрация
           h2.ticket__subtitle Коментарии
-          .ticket__comment-form
-            if errors
-              .ticket-form__errors
-                h2.ticket-form__errors-title Ошибка отправки формы
-                ul.ticket-form__errors-list
-                  each error in errors
-                    li=error.msg
-            form.form.comment-form(action=`/offers/${offer.id}` method="post")
-              .comment-form__header
-                a.comment-form__avatar.avatar(href="#")
-                  img(src="/img/avatar.jpg" srcset="/img/avatar@2x.jpg 2x" alt="Аватар пользователя")
-                p.comment-form__author Вам слово
-              .comment-form__field
-                .form__field
-                  textarea#comment-field.js-field(name="text" cols="30" rows="10" maxlength="400" minlength="50")
-                  label(for="comment-field") Текст комментария
-                  span Обязательное поле
-              button.comment-form__button.btn.btn--white.js-button(type="submit" disabled="") Отправить
-          .ticket__comments-list
-            if offer && offer.comments
-              ul.comments-list
-                each comment in offer.comments
-                  li
-                    .comment-card
-                      .comment-card__header
-                        a.comment-card__avatar.avatar(href="#")
-                          img(src=`/img/${comment.users.avatar.split(`, `)[0]}` srcset=`/img/${comment.users.avatar.split(`, `)[1]} 2x` alt="Аватар пользователя")
-                        p.comment-card__author= `${comment.users.firstname} ${comment.users.lastname}`
-                      .comment-card__content
-                        p= comment.text
+          if user
+            .ticket__comment-form
+              if errors
+                .ticket-form__errors
+                  h2.ticket-form__errors-title Ошибка отправки формы
+                  ul.ticket-form__errors-list
+                    each error in errors
+                      li=error.msg
+              form.form.comment-form(action=`/offers/${offer.id}` method="post")
+                .comment-form__header
+                  span.comment-form__avatar.avatar
+                    img(src=`/img/${user.avatar}` srcset=`/img/${user.avatar}` alt="Аватар пользователя")
+                  p.comment-form__author Вам слово
+                .comment-form__field
+                  .form__field
+                    textarea#comment-field.js-field(name="text" cols="30" rows="10" maxlength="400" minlength="50")
+                    label(for="comment-field") Текст комментария
+                    span Обязательное поле
+                input(type='hidden' name='_csrf' value=csrf)
+                button.comment-form__button.btn.btn--white.js-button(type="submit" disabled="") Отправить
+            if offer && offer.comments.length > 0
+              .ticket__comments-list
+                if offer && offer.comments
+                  ul.comments-list
+                    each comment in offer.comments
+                      li
+                        .comment-card
+                          .comment-card__header
+                            a.comment-card__avatar.avatar(href="#")
+                              img(src=`/img/${comment.users.avatar.split(`, `)[0]}` srcset=`/img/${comment.users.avatar.split(`, `)[1]} 2x` alt="Аватар пользователя")
+                            p.comment-card__author= `${comment.users.firstname} ${comment.users.lastname}`
+                          .comment-card__content
+                            p= comment.text
+            else
+              .ticket__message
+                p У этой публикации еще нет ни одного комментария.
 

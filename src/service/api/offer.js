@@ -112,7 +112,6 @@ const getOffersRouter = (offerService, commentService, categoryService) => {
 
     offerFormData = {
       ...offerFormData,
-      userId: 1,
       date: getTodayDate()
     };
 
@@ -199,8 +198,8 @@ const getOffersRouter = (offerService, commentService, categoryService) => {
 
   offersRouter.post(`/:offerId/comments`, checkParamIsInteger, ...newCommentFormFieldsRules, async (req, res) => {
     const {offerId} = req.params;
-    const errors = validate();
-    let commentData = req.body;
+    const errors = validate(req);
+    let commentData = {...req.body};
 
     const isOfferExists = await offerService.findOne(offerId);
 
@@ -223,7 +222,6 @@ const getOffersRouter = (offerService, commentService, categoryService) => {
     commentData = {
       ...commentData,
       offerId,
-      userId: 2,
       date: getTodayDate()
     };
 

@@ -1,8 +1,12 @@
 'use strict';
 
 const {Router} = require(`express`);
+const csrf = require(`csurf`);
 const {fileUploader} = require(`../file-uploader`);
+const checkAuth = require(`../check-auth`);
+const {RouteProtectionType} = require(`../../constants`);
 
+const csrfProtection = csrf({cookie: true});
 const upload = fileUploader.single(`avatar`);
 
 const getMainRouter = (service) => {
@@ -24,11 +28,11 @@ const getMainRouter = (service) => {
     }
   });
 
-  mainRouter.get(`/register`, (req, res) => {
-    res.render(`sign-up`);
+  mainRouter.get(`/register`, csrfProtection, checkAuth(service, RouteProtectionType.SEMI), (req, res) => {
+    return res.render(`sign-up`, {csrf: req.csrfToken()});
   });
 
-  mainRouter.post(`/register`, upload, async (req, res, next) => {
+  mainRouter.post(`/register`, checkAuth(service, RouteProtectionType.SEMI), upload, csrfProtection, async (req, res, next) => {
     try {
       const file = req.file;
       let userFormData = {...req.body};
@@ -51,7 +55,7 @@ const getMainRouter = (service) => {
 
       if (userCreationResult.validationError) {
         const {errors} = userCreationResult;
-        return res.render(`sign-up`, {errors, userFormData});
+        return res.render(`sign-up`, {errors, userFormData, csrf: req.csrfToken()});
       }
 
       return res.redirect(`/login`);
@@ -60,7 +64,36 @@ const getMainRouter = (service) => {
     }
   });
 
-  mainRouter.get(`/login`, (req, res) => res.render(`login`));
+  mainRouter.get(`/login`, csrfProtection, checkAuth(service, RouteProtectionType.SEMI), (req, res) => {
+    return res.render(`login`, {csrf: req.csrfToken()});
+  });
+
+  mainRouter.post(`/login`, csrfProtection, checkAuth(service, RouteProtectionType.SEMI), async (req, res, next) => {
+    try {
+      let userData = {...req.body};
+      const userLoginResult = await service.logUser(userData);
+
+      if (userLoginResult.validationError) {
+        const {errors} = userLoginResult;
+        return res.render(`login`, {errors, userData, csrf: req.csrfToken()});
+      }
+
+      const {accessToken, refreshToken, user} = userLoginResult;
+      res.cookie(`auth_token`, accessToken);
+      res.cookie(`refresh_token`, refreshToken);
+      req.app.locals.user = user;
+      return res.redirect(`/`);
+    } catch (err) {
+      return next(err);
+    }
+
+  });
+
+  mainRouter.get(`/logout`, async (req, res) => {
+    req.app.locals.user = null;
+    res.clearCookie(`auth_token`);
+    return res.redirect(`/login`);
+  });
 
   mainRouter.get(`/search`, async (req, res, next) => {
     try {
