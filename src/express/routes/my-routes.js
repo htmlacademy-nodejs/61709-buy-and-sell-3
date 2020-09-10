@@ -1,14 +1,17 @@
 'use strict';
 
 const {Router} = require(`express`);
+const checkAuth = require(`../check-auth`);
+const {RouteProtectionType} = require(`../../constants`);
 
 const getMyRouter = (service) => {
 
   const myRouter = new Router();
 
-  myRouter.get(`/`, async (req, res, next) => {
+  myRouter.get(`/`, checkAuth(service, RouteProtectionType.FULL), async (req, res, next) => {
     try {
-      const offers = await service.getOffersByUserId(1);
+      const user = req.user;
+      const offers = await service.getOffersByUserId(user.id);
       return res.render(`my-offers`, {offers});
     } catch (err) {
       return next(err);
@@ -26,7 +29,7 @@ const getMyRouter = (service) => {
     }
   });
 
-  myRouter.get(`/comments/:commentId`, async (req, res, next) => {
+  myRouter.get(`/comments/:commentId`, checkAuth(service, RouteProtectionType.FULL), async (req, res, next) => {
     try {
       const {commentId} = req.params;
       await service.deleteComment(commentId);
@@ -37,9 +40,10 @@ const getMyRouter = (service) => {
     }
   });
 
-  myRouter.get(`/comments`, async (req, res, next) => {
+  myRouter.get(`/comments`, checkAuth(service, RouteProtectionType.FULL), async (req, res, next) => {
     try {
-      const offers = await service.getLastOfferComments(1);
+      const user = req.user;
+      const offers = await service.getLastOfferComments(user.id);
       return res.render(`comments`, {offers});
     } catch (err) {
       return next(err);

@@ -1,9 +1,13 @@
 'use strict';
 
 const {Router} = require(`express`);
+const csrf = require(`csurf`);
 const moment = require(`moment`);
 const {fileUploader} = require(`../file-uploader`);
+const checkAuth = require(`../check-auth`);
+const {RouteProtectionType} = require(`../../constants`);
 
+const csrfProtection = csrf({cookie: true});
 const upload = fileUploader.single(`picture`);
 
 const getOffersRouter = (service) => {
@@ -35,23 +39,25 @@ const getOffersRouter = (service) => {
     }
   });
 
-  offersRouter.get(`/add`, async (req, res, next) => {
+  offersRouter.get(`/add`, csrfProtection, checkAuth(service, RouteProtectionType.FULL), async (req, res, next) => {
     try {
       const categories = await service.getAllCategories();
-      return res.render(`new-offer`, {categories});
+      return res.render(`new-offer`, {categories, csrf: req.csrfToken()});
     } catch (err) {
       return next(err);
     }
   });
 
-  offersRouter.post(`/add`, upload, async (req, res, next) => {
+  offersRouter.post(`/add`, checkAuth(service, RouteProtectionType.FULL), upload, csrfProtection, async (req, res, next) => {
     try {
       const file = req.file;
+      const user = req.user;
       let offerData = {...req.body};
 
       if (file) {
         offerData = {
           ...offerData,
+          userId: user.id,
           picture: file.filename,
         };
       }
@@ -60,7 +66,7 @@ const getOffersRouter = (service) => {
 
       if (offerCreationResult.validationError) {
         const {errors, categories} = offerCreationResult;
-        return res.render(`new-offer`, {errors, categories, offerData});
+        return res.render(`new-offer`, {errors, categories, offerData, csrf: req.csrfToken()});
       }
 
       return res.redirect(`/my`);
@@ -69,19 +75,19 @@ const getOffersRouter = (service) => {
     }
   });
 
-  offersRouter.get(`/edit/:id`, async (req, res, next) => {
+  offersRouter.get(`/edit/:id`, csrfProtection, checkAuth(service, RouteProtectionType.FULL), async (req, res, next) => {
     try {
       const offerId = req.params.id;
       const offer = await service.getOfferById(offerId);
       const categories = await service.getAllCategories();
 
-      return res.render(`edit-offer`, {offer, categories});
+      return res.render(`edit-offer`, {offer, categories, csrf: req.csrfToken()});
     } catch (err) {
       return next(err);
     }
   });
 
-  offersRouter.post(`/edit/:id`, upload, async (req, res, next) => {
+  offersRouter.post(`/edit/:id`, checkAuth(service, RouteProtectionType.FULL), upload, csrfProtection, async (req, res, next) => {
     try {
       const offerId = req.params.id;
       const file = req.file;
@@ -106,7 +112,8 @@ const getOffersRouter = (service) => {
             ...offerData,
             categories: offerData.categories ? offerData.categories : []
           },
-          offerId
+          offerId,
+          csrf: req.csrfToken()
         });
       }
 
@@ -116,26 +123,29 @@ const getOffersRouter = (service) => {
     }
   });
 
-  offersRouter.get(`/:id`, async (req, res, next) => {
+  offersRouter.get(`/:id`, csrfProtection, async (req, res, next) => {
     try {
       const offerId = req.params.id;
       const offer = await service.getOfferById(offerId);
-      return res.render(`offer`, {offer, moment});
+      return res.render(`offer`, {offer, moment, csrf: req.csrfToken()});
     } catch (err) {
       return next(err);
     }
   });
 
-  offersRouter.post(`/:offerId`, async (req, res, next) => {
+  offersRouter.post(`/:offerId`, csrfProtection, checkAuth(service, RouteProtectionType.FULL), async (req, res, next) => {
     try {
       let commentData = {...req.body};
+      const user = req.user;
       const {offerId} = req.params;
+
+      commentData = {...commentData, userId: user.id};
 
       const commentCreationResult = await service.createComment(commentData, offerId);
 
       if (commentCreationResult.validationError) {
         const {errors, offer} = commentCreationResult;
-        return res.render(`offer`, {errors, offer});
+        return res.render(`offer`, {errors, offer, csrf: req.csrfToken()});
       }
 
       return res.redirect(`/offers/${offerId}`);

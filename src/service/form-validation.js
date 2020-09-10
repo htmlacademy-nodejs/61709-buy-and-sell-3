@@ -64,7 +64,6 @@ const newUserFormFieldsRules = [
     .withMessage(`Почта введена некорректно`)
     .custom(async (value) => {
       const isUserExist = await userService.findUserByEmail(value);
-      console.log(isUserExist);
 
       if (isUserExist) {
         throw Error(`Пользователь с почтой "${value}" уже зарегистрирован`);
@@ -117,8 +116,26 @@ const newUserFormFieldsRules = [
     })
 ];
 
+const loginUserFormFieldsRules = [
+  check(`email`)
+    .trim()
+    .notEmpty()
+    .withMessage(`Введите почту`)
+    .bail()
+    .isEmail()
+    .withMessage(`Почта введена некорректно`),
+  check(`password`)
+    .trim()
+    .notEmpty()
+    .withMessage(`Введите пароль`)
+    .bail()
+    .isLength({min: 6})
+    .withMessage(`Пароль должен содержать минимум 6 символов`)
+];
+
 module.exports = {
   newOfferFormFieldsRules,
   newCommentFormFieldsRules,
-  newUserFormFieldsRules
+  newUserFormFieldsRules,
+  loginUserFormFieldsRules
 };

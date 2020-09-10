@@ -1,6 +1,7 @@
 'use strict';
 const fs = require(`fs`).promises;
 const moment = require(`moment`);
+const jwt = require(`jsonwebtoken`);
 const {validationResult} = require(`express-validator`);
 
 const getRandomInt = (min, max) => {
@@ -59,6 +60,16 @@ const getTodayDate = () => moment.utc().format();
 const errorFormatter = ({msg}) => ({msg});
 const validate = (req) => validationResult(req).formatWith(errorFormatter).array();
 
+const generateTokens = (tokenData) => {
+  const accessToken = jwt.sign({id: tokenData}, process.env.JWT_ACCESS_SECRET);
+  const refreshToken = jwt.sign({id: tokenData}, process.env.JWT_REFRESH_SECRET);
+
+  return {
+    accessToken,
+    refreshToken
+  };
+};
+
 module.exports = {
   getRandomInt,
   shuffle,
@@ -68,5 +79,6 @@ module.exports = {
   makePriceWithSpaces,
   getMostDiscussedOffers,
   getTodayDate,
-  validate
+  validate,
+  generateTokens
 };

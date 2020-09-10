@@ -52,4 +52,5 @@ block content
             )
             label(for="confirm_password") Пароль еще раз
             span Обязательное поле
+          input(type='hidden' name='_csrf' value=csrf)
           button.sign-up__button.btn.btn--medium.js-button(type="submit" disabled="") Создать аккаунт

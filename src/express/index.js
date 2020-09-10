@@ -2,9 +2,12 @@
 
 const path = require(`path`);
 const express = require(`express`);
+const bodyParser = require(`body-parser`);
+const cookieParser = require(`cookie-parser`);
 const chalk = require(`chalk`);
 const {createAPI} = require(`./axios-api`);
 const ApiService = require(`./api-sevice/service`);
+const checkAuth = require(`./check-auth`);
 
 const {
   getOffersRouter,
@@ -21,13 +24,17 @@ const {
 
 const service = new ApiService(createAPI());
 const app = express();
+app.locals.user = null;
 
 app.use(express.static(path.resolve(__dirname, PUBLIC_DIR)));
-app.use(express.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.set(`views`, path.resolve(__dirname, `templates`));
 app.set(`view engine`, `pug`);
 
+app.use(checkAuth(service));
 app.use(`/`, getMainRouter(service));
 app.use(`/my`, getMyRouter(service));
 app.use(`/offers`, getOffersRouter(service));

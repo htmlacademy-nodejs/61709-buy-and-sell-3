@@ -16,6 +16,10 @@ class CategoryService {
   async findUserByEmail(email) {
     return await User.findOne({where: {email}});
   }
+
+  async findUserById(userId) {
+    return await User.findOne({where: {id: userId}});
+  }
 }
 
 module.exports = CategoryService;
