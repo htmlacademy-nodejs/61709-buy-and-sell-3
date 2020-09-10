@@ -1,5 +1,6 @@
 'use strict';
 
+const util = require(`util`);
 const {Router} = require(`express`);
 const bcrypt = require(`bcrypt`);
 const jwt = require(`jsonwebtoken`);
@@ -10,6 +11,8 @@ const {
 const {HttpCode} = require(`../../constants`);
 const {validate, generateTokens} = require(`../../utils`);
 const saltRounds = 10;
+
+const jwtVerify = util.promisify(jwt.verify);
 
 const userRouter = new Router();
 
@@ -58,21 +61,20 @@ const getUserRouter = (userService) => {
   });
 
   userRouter.post(`/auth`, async (req, res) => {
-    const {accessToken} = req.body;
+    try {
+      const {accessToken} = req.body;
 
-    if (!accessToken) {
-      return res.sendStatus(HttpCode.UNAUTHORIZED);
-    }
-
-    return jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET, async (err, userData) => {
-
-      if (err) {
+      if (!accessToken) {
         return res.sendStatus(HttpCode.UNAUTHORIZED);
       }
 
-      const user = await userService.findUserById(userData.id);
+      const jwtVerifyResult = await jwtVerify(accessToken, process.env.JWT_ACCESS_SECRET);
+
+      const user = await userService.findUserById(jwtVerifyResult.id);
       return res.status(HttpCode.SUCCESS).json({user});
-    });
+    } catch (err) {
+      return res.sendStatus(HttpCode.UNAUTHORIZED);
+    }
   });
 
   return userRouter;

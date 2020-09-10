@@ -2,6 +2,7 @@
 
 const path = require(`path`);
 const express = require(`express`);
+const bodyParser = require(`body-parser`);
 const cookieParser = require(`cookie-parser`);
 const chalk = require(`chalk`);
 const {createAPI} = require(`./axios-api`);
@@ -26,7 +27,8 @@ const app = express();
 app.locals.user = null;
 
 app.use(express.static(path.resolve(__dirname, PUBLIC_DIR)));
-app.use(express.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.set(`views`, path.resolve(__dirname, `templates`));
